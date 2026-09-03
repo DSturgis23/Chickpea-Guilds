@@ -13,12 +13,12 @@ import type {
 // the admin portal; the 6th (Storm Chasers) is a proposed replacement.
 // ─────────────────────────────────────────────────────────────────────────────
 export const GUILDS: Guild[] = [
-  { id: 'stokers', name: 'The Guild of Stokers', nickname: 'The Stoked', colour: '#C64A1F', motto: 'Keep the fire fed.' },
-  { id: 'pyros', name: 'The Guild of Pyrotechnicians', nickname: 'The Pyros', colour: '#B3122E', motto: 'Make it a spectacle.' },
-  { id: 'stormchasers', name: 'The Guild of Meteorologists', nickname: 'The Storm Chasers', colour: '#2E5A88', motto: 'Read the room, ride the front.' },
-  { id: 'strikers', name: 'The Guild of Matchmakers', nickname: 'The Strikers', colour: '#1F7A6B', motto: 'One strike, one light.' },
-  { id: 'gunners', name: 'The Guild of Musketeers', nickname: 'The Gunners', colour: '#4A5468', motto: 'All for one.' },
-  { id: 'hammers', name: 'The Guild of Blacksmiths', nickname: 'The Hammers', colour: '#8A6D3B', motto: 'Strike while it’s hot.' },
+  { id: 'stokers', name: 'The Guild of Stokers', nickname: 'The Stoked', colour: '#F2762E', motto: 'Keep the fire fed.' },
+  { id: 'pyros', name: 'The Guild of Pyrotechnicians', nickname: 'The Pyros', colour: '#E23A4E', motto: 'Make it a spectacle.' },
+  { id: 'stormchasers', name: 'The Guild of Meteorologists', nickname: 'The Storm Chasers', colour: '#6E7BEA', motto: 'Read the room, ride the front.' },
+  { id: 'strikers', name: 'The Guild of Matchmakers', nickname: 'The Strikers', colour: '#43B98A', motto: 'One strike, one light.' },
+  { id: 'gunners', name: 'The Guild of Musketeers', nickname: 'The Gunners', colour: '#9AA3B2', motto: 'All for one.' },
+  { id: 'hammers', name: 'The Guild of Blacksmiths', nickname: 'The Hammers', colour: '#C98A46', motto: 'Strike while it’s hot.' },
 ]
 
 export const guildById = (id: string) => GUILDS.find((g) => g.id === id)!
@@ -30,28 +30,28 @@ export const PILLARS: Pillar[] = [
   {
     key: 'people',
     name: 'People',
-    colour: '#3B6FB0',
+    colour: '#6BA7E0',
     cupAward: 'Spark Starter',
     blurb: 'Training, cross-skilling, qualifications, service and bringing others in.',
   },
   {
     key: 'content',
     name: 'Content',
-    colour: '#C9A227',
+    colour: '#E0B84A',
     cupAward: 'Detail Spark',
     blurb: 'Events, menu ideas, supplier engagement and telling the Chickpea story.',
   },
   {
     key: 'environment',
     name: 'Environment',
-    colour: '#2E7D5B',
+    colour: '#4FBF8B',
     cupAward: 'Rural Spark',
     blurb: 'Energy efficiency and making our iconic spaces better than we found them.',
   },
   {
     key: 'engagement',
     name: 'Engagement',
-    colour: '#C0392B',
+    colour: '#E2564A',
     cupAward: 'Guest Spark',
     blurb: 'Memorable guest moments, Come Back Soons and giving back to the community.',
   },

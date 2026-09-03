@@ -30,7 +30,7 @@ export function AppShell() {
       <header className="safe-top sticky top-0 z-20 border-b border-line bg-paper/85 backdrop-blur md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="leading-tight">
-            <p className="font-serif text-lg font-semibold tracking-tight text-maroon">
+            <p className="font-serif text-lg font-semibold tracking-tight text-gold-bright">
               Chickpea Guilds
             </p>
             <p className="label mt-0.5">
@@ -46,7 +46,7 @@ export function AppShell() {
       {/* ── Desktop top bar ──────────────────────────────────────────── */}
       <DesktopTopBar path={location.pathname} />
 
-      <main className="flex-1 px-4 pb-28 pt-5 md:px-10 md:pb-40 md:pt-8 lg:px-14">
+      <main className="flex-1 px-4 pb-28 pt-5 md:px-10 md:pb-44 md:pt-8 lg:px-14">
         <div className="mx-auto w-full max-w-md md:max-w-5xl">
           <Outlet />
         </div>
@@ -54,9 +54,9 @@ export function AppShell() {
 
       {/* ── Bottom tab bar — every size; a floating pill on wide screens ── */}
       <nav
-        className="safe-bottom fixed inset-x-0 bottom-0 z-20 mx-auto max-w-md border-t border-line bg-surface/95 backdrop-blur
+        className="safe-bottom fixed inset-x-0 bottom-0 z-20 mx-auto max-w-md border-t border-line bg-surface/90 backdrop-blur
                    md:inset-x-auto md:bottom-6 md:left-1/2 md:w-auto md:max-w-none md:-translate-x-1/2 md:rounded-full md:border
-                   md:px-2 md:shadow-[0_8px_30px_rgba(34,28,24,0.14)]"
+                   md:px-2 md:shadow-[0_0_0_1px_rgba(240,200,126,0.08),0_16px_40px_-12px_rgba(0,0,0,0.8)]"
       >
         <div className="grid grid-cols-5 md:flex md:gap-1">
           {tabs.map(({ to, label, icon: Icon, end, center }) => (
@@ -67,13 +67,13 @@ export function AppShell() {
               className={({ isActive }) =>
                 `relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold md:flex-row md:gap-2 md:rounded-full md:px-4 md:py-2.5 md:text-xs md:transition-colors ${
                   isActive
-                    ? 'text-maroon md:bg-maroon-wash'
+                    ? 'text-gold-bright md:bg-maroon-wash'
                     : 'text-ink-faint md:hover:text-ink-soft'
                 }`
               }
             >
               {center ? (
-                <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-maroon text-white shadow-lg shadow-maroon/25 ring-4 ring-paper md:mt-0 md:h-8 md:w-8 md:shadow-none md:ring-0">
+                <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-maroon text-ink shadow-[0_0_0_1px_rgba(240,200,126,0.2),0_8px_24px_-6px_rgba(255,122,47,0.5)] ring-4 ring-paper md:mt-0 md:h-8 md:w-8 md:shadow-none md:ring-0">
                   <Icon width={23} height={23} className="md:h-[18px] md:w-[18px]" />
                 </span>
               ) : (
@@ -105,7 +105,7 @@ function DesktopTopBar({ path }: { path: string }) {
     <header className="hidden border-b border-line bg-paper/85 backdrop-blur md:block">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-10 py-4 lg:px-14">
         <div className="flex items-baseline gap-4">
-          <p className="font-serif text-lg font-semibold tracking-tight text-maroon">
+          <p className="font-serif text-lg font-semibold tracking-tight text-gold-bright">
             Chickpea Guilds
           </p>
           <span className="text-ink-faint">/</span>

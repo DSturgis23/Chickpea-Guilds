@@ -12,8 +12,8 @@ export function Card({
   return (
     <div
       onClick={onClick}
-      className={`rounded-xl border border-line bg-surface ${
-        onClick ? 'cursor-pointer transition-colors hover:border-ink-faint/40' : ''
+      className={`rounded-[14px] border border-line bg-surface shadow-[0_1px_0_rgba(255,255,255,0.03)_inset,0_10px_24px_-16px_rgba(0,0,0,0.7)] ${
+        onClick ? 'cursor-pointer transition-colors hover:border-gold/40' : ''
       } ${className}`}
     >
       {children}
@@ -64,10 +64,11 @@ export function Button({
     lg: 'px-5 py-3.5 text-base w-full',
   }
   const variants = {
-    primary: 'bg-maroon text-white hover:bg-maroon-dark',
-    secondary: 'border border-line bg-surface text-ink hover:bg-paper',
-    ghost: 'text-maroon hover:bg-maroon-wash',
-    danger: 'border border-[#e0bcc2] bg-surface text-[#98202f] hover:bg-[#f7ecee]',
+    primary:
+      'bg-maroon text-ink hover:bg-maroon-bright shadow-[0_0_0_1px_rgba(240,200,126,0.12),0_8px_20px_-10px_rgba(168,31,56,0.6)]',
+    secondary: 'border border-line bg-surface-2 text-ink hover:border-gold/40',
+    ghost: 'text-gold hover:bg-gold-wash',
+    danger: 'border border-[#5a2a2f] bg-surface-2 text-[#e2867f] hover:border-[#7a3a40]',
   }
   return (
     <button
@@ -91,8 +92,8 @@ export function Pill({
       className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold"
       style={
         subtle
-          ? { backgroundColor: `${colour}14`, color: colour }
-          : { backgroundColor: colour, color: '#fff' }
+          ? { backgroundColor: `${colour}22`, color: colour, boxShadow: `inset 0 0 0 1px ${colour}33` }
+          : { backgroundColor: colour, color: '#14100d' }
       }
     >
       {children}
@@ -104,7 +105,14 @@ export function Bar({ value, max, colour }: { value: number; max: number; colour
   const pct = max > 0 ? Math.max(2, Math.round((value / max) * 100)) : 0
   return (
     <div className="h-1.5 w-full overflow-hidden rounded-full bg-paper-2">
-      <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: colour }} />
+      <div
+        className="h-full rounded-full"
+        style={{
+          width: `${pct}%`,
+          backgroundImage: `linear-gradient(90deg, ${colour}88, ${colour})`,
+          boxShadow: `0 0 12px -2px ${colour}aa`,
+        }}
+      />
     </div>
   )
 }
@@ -156,7 +164,9 @@ export function Toggle({
           key={o.key}
           onClick={() => onChange(o.key)}
           className={`flex-1 rounded-[7px] px-3 py-1.5 text-xs font-semibold transition-colors ${
-            value === o.key ? 'bg-surface text-ink shadow-sm' : 'text-ink-faint hover:text-ink-soft'
+            value === o.key
+              ? 'bg-surface-2 text-ink shadow-[0_0_0_1px_rgba(240,200,126,0.14)]'
+              : 'text-ink-faint hover:text-ink-soft'
           }`}
         >
           {o.label}

@@ -2,36 +2,44 @@
 
 /*
   Chickpea Guilds — design tokens.
-  Direction: premium editorial. Warm paper, generous whitespace, hairline rules,
-  a serif (Fraunces) for headlines and big figures, Inter for everything else.
-  Maroon + gold used sparingly as accents. Guild / pillar colours live in
-  src/data/seed.ts and are applied inline.
+  Direction: dark "forge". Warm charcoal, ember + gold light, Fraunces serif for
+  headlines and big figures, Inter for body. Each guild has one accent colour
+  (src/data/seed.ts) used as a glow / edge, never a flat fill.
+
+  Token names are kept generic (paper / surface / ink / line …) so every screen
+  picks up the dark palette; Home layers the forge components on top.
 */
 @theme {
-  --color-paper: #faf6ef;
-  --color-paper-2: #f2ebdd;
-  --color-surface: #ffffff;
+  --color-paper: #14100d; /* app background */
+  --color-paper-2: #221a14; /* recessed: tracks, wells */
+  --color-surface: #1c1712; /* cards */
+  --color-surface-2: #241c15; /* raised / hover */
 
-  --color-ink: #221c18;
-  --color-ink-soft: #6e6259;
-  --color-ink-faint: #9a8f84;
+  --color-ink: #f4ece0; /* primary text (warm cream) */
+  --color-ink-soft: #c4b5a2;
+  --color-ink-faint: #8d7f6f;
 
-  --color-maroon: #6e1423;
-  --color-maroon-dark: #54101b;
-  --color-maroon-wash: #f3e7e4;
-  --color-gold: #b0862a;
-  --color-gold-bright: #c9a227;
-  --color-gold-wash: #f2e9cf;
+  --color-maroon: #7d1628;
+  --color-maroon-dark: #5c101e;
+  --color-maroon-bright: #a81f38;
+  --color-maroon-wash: #2b1418; /* tinted row background */
 
-  --color-line: #e7decf;
-  --color-line-soft: #efe8db;
+  --color-gold: #d9a94a;
+  --color-gold-bright: #eec87e;
+  --color-gold-wash: #241d12;
+
+  --color-ember: #ff7a2f;
+  --color-ember-wash: #3a2113;
+
+  --color-line: #342b22;
+  --color-line-soft: #29211a;
 
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
     Roboto, Helvetica, Arial, sans-serif;
   --font-serif: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Palatino,
     Georgia, 'Times New Roman', serif;
 
-  --radius-card: 0.75rem;
+  --radius-card: 0.875rem;
 }
 
 html,
@@ -42,32 +50,34 @@ body,
 
 body {
   margin: 0;
-  background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
   font-feature-settings: 'ss01';
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
+  background-color: #14100d;
+  /* faint forge glow — texture without an image */
+  background-image:
+    radial-gradient(60rem 40rem at 80% -10%, rgba(255, 122, 47, 0.08), transparent 70%),
+    radial-gradient(50rem 40rem at -10% 10%, rgba(125, 22, 40, 0.14), transparent 65%);
+  background-attachment: fixed;
 }
 
-/* Editorial headline defaults — Fraunces with a gentle optical setting. */
 .font-serif {
   font-optical-sizing: auto;
   font-variation-settings: 'SOFT' 40, 'WONK' 0;
   letter-spacing: -0.01em;
 }
 
-/* Small-caps style label used across the app. */
 .label {
   font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-ink-faint);
 }
 
-/* Big serif figures for key stats. */
 .figure {
   font-family: var(--font-serif);
   font-variation-settings: 'SOFT' 0, 'WONK' 0;
@@ -88,7 +98,6 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Respect reduced-motion for the few transitions/animations we add. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -101,7 +110,7 @@ a {
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -109,5 +118,27 @@ a {
   }
 }
 .rise {
-  animation: rise 0.4s ease both;
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.rise-1 { animation-delay: 0.04s; }
+.rise-2 { animation-delay: 0.09s; }
+.rise-3 { animation-delay: 0.14s; }
+.rise-4 { animation-delay: 0.19s; }
+
+@keyframes emberPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+.ember-pulse {
+  animation: emberPulse 3.4s ease-in-out infinite;
+}
+
+@keyframes heatFill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.heat-fill {
+  transform-origin: left;
+  animation: heatFill 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.15s;
 }
