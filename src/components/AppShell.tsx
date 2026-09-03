@@ -1,7 +1,9 @@
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { useStore } from '../state/store'
 import { guildById } from '../data/seed'
+import { currentMonthPeriod } from '../lib/fy'
+import { guildStandings } from '../lib/standings'
 import { GuildCrest } from './GuildCrest'
 import { IconCalendar, IconGrid, IconHome, IconSpark, IconTrophy } from './icons'
 
@@ -17,57 +19,69 @@ export function AppShell() {
   const { user } = useAuth()
   const { pendingCount } = useStore()
   const navigate = useNavigate()
-  const guild = user ? guildById(user.guildId) : null
+  const location = useLocation()
+  if (!user) return null
+
+  const guild = guildById(user.guildId)
 
   return (
-    <div className="mx-auto flex min-h-full max-w-md flex-col bg-paper">
-      <header className="safe-top sticky top-0 z-20 border-b border-line bg-paper/85 backdrop-blur">
+    <div className="mx-auto flex min-h-full max-w-md flex-col md:max-w-none">
+      {/* ── Mobile header ─────────────────────────────────────────────── */}
+      <header className="safe-top sticky top-0 z-20 border-b border-line bg-paper/85 backdrop-blur md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="leading-tight">
-            <p className="font-serif text-lg font-black tracking-tight text-maroon">
+            <p className="font-serif text-lg font-semibold tracking-tight text-maroon">
               Chickpea Guilds
             </p>
-            {guild && (
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
-                {guild.nickname} · {guild.motto}
-              </p>
-            )}
+            <p className="label mt-0.5">
+              {guild.nickname} · {guild.motto}
+            </p>
           </div>
-          {user && (
-            <button onClick={() => navigate('/profile')} aria-label="Your profile">
-              <GuildCrest guildId={user.guildId} size="md" />
-            </button>
-          )}
+          <button onClick={() => navigate('/profile')} aria-label="Your profile">
+            <GuildCrest guildId={user.guildId} size="md" />
+          </button>
         </div>
       </header>
 
-      <main className="flex-1 px-4 pb-28 pt-4">
-        <Outlet />
+      {/* ── Desktop top bar ──────────────────────────────────────────── */}
+      <DesktopTopBar path={location.pathname} />
+
+      <main className="flex-1 px-4 pb-28 pt-5 md:px-10 md:pb-40 md:pt-8 lg:px-14">
+        <div className="mx-auto w-full max-w-md md:max-w-5xl">
+          <Outlet />
+        </div>
       </main>
 
-      <nav className="safe-bottom fixed inset-x-0 bottom-0 z-20 mx-auto max-w-md border-t border-line bg-white/95 backdrop-blur">
-        <div className="grid grid-cols-5">
+      {/* ── Bottom tab bar — every size; a floating pill on wide screens ── */}
+      <nav
+        className="safe-bottom fixed inset-x-0 bottom-0 z-20 mx-auto max-w-md border-t border-line bg-surface/95 backdrop-blur
+                   md:inset-x-auto md:bottom-6 md:left-1/2 md:w-auto md:max-w-none md:-translate-x-1/2 md:rounded-full md:border
+                   md:px-2 md:shadow-[0_8px_30px_rgba(34,28,24,0.14)]"
+      >
+        <div className="grid grid-cols-5 md:flex md:gap-1">
           {tabs.map(({ to, label, icon: Icon, end, center }) => (
             <NavLink
               key={to}
               to={to}
               end={end}
               className={({ isActive }) =>
-                `relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold ${
-                  isActive ? 'text-maroon' : 'text-ink-soft'
+                `relative flex flex-col items-center gap-1 py-2.5 text-[10px] font-semibold md:flex-row md:gap-2 md:rounded-full md:px-4 md:py-2.5 md:text-xs md:transition-colors ${
+                  isActive
+                    ? 'text-maroon md:bg-maroon-wash'
+                    : 'text-ink-faint md:hover:text-ink-soft'
                 }`
               }
             >
               {center ? (
-                <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-maroon text-white shadow-lg shadow-maroon/30 ring-4 ring-paper">
-                  <Icon width={24} height={24} />
+                <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-maroon text-white shadow-lg shadow-maroon/25 ring-4 ring-paper md:mt-0 md:h-8 md:w-8 md:shadow-none md:ring-0">
+                  <Icon width={23} height={23} className="md:h-[18px] md:w-[18px]" />
                 </span>
               ) : (
-                <Icon width={22} height={22} />
+                <Icon width={21} height={21} className="md:h-[18px] md:w-[18px]" />
               )}
               <span>{label}</span>
               {to === '/more' && pendingCount > 0 && (
-                <span className="absolute right-5 top-1.5 h-2 w-2 rounded-full bg-gold" />
+                <span className="absolute right-6 top-1.5 h-1.5 w-1.5 rounded-full bg-gold-bright md:right-2 md:top-1.5" />
               )}
             </NavLink>
           ))}
@@ -75,4 +89,71 @@ export function AppShell() {
       </nav>
     </div>
   )
+}
+
+function DesktopTopBar({ path }: { path: string }) {
+  const { awards } = useStore()
+  const { user } = useAuth()
+  const navigate = useNavigate()
+  if (!user) return null
+  const month = currentMonthPeriod()
+  const standings = guildStandings(awards, month)
+  const mine = standings.find((s) => s.guildId === user.guildId)
+  const title = TITLES[path] ?? titleFromPath(path)
+
+  return (
+    <header className="hidden border-b border-line bg-paper/85 backdrop-blur md:block">
+      <div className="mx-auto flex max-w-5xl items-center justify-between px-10 py-4 lg:px-14">
+        <div className="flex items-baseline gap-4">
+          <p className="font-serif text-lg font-semibold tracking-tight text-maroon">
+            Chickpea Guilds
+          </p>
+          <span className="text-ink-faint">/</span>
+          <h1 className="font-serif text-lg font-semibold tracking-tight">{title}</h1>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="label">{month.label}</span>
+          {mine && (
+            <button
+              onClick={() => navigate('/profile')}
+              className="flex items-center gap-2.5 rounded-full border border-line bg-surface py-1.5 pl-1.5 pr-3.5 hover:border-ink-faint/40"
+            >
+              <GuildCrest guildId={user.guildId} size="sm" />
+              <span className="text-left leading-tight">
+                <span className="block text-xs font-semibold">{user.firstName}</span>
+                <span className="block text-[11px] text-ink-faint">
+                  {guildById(user.guildId).nickname} · {ordinal(mine.rank)}
+                </span>
+              </span>
+            </button>
+          )}
+        </div>
+      </div>
+    </header>
+  )
+}
+
+const TITLES: Record<string, string> = {
+  '/': 'Home',
+  '/leaderboard': 'Leaderboard',
+  '/nominate': 'Nominate for sparks',
+  '/events': 'Events',
+  '/documents': 'Documents',
+  '/about': 'How Guilds work',
+  '/profile': 'Your profile',
+  '/more': 'More',
+  '/admin/approvals': 'Approvals',
+  '/admin/behaviours': 'Behaviours & points',
+  '/admin/people': 'People & guild allocation',
+  '/admin/reports': 'Reports',
+}
+
+function titleFromPath(path: string): string {
+  const last = path.split('/').filter(Boolean).pop() ?? 'Home'
+  return last.charAt(0).toUpperCase() + last.slice(1)
+}
+
+function ordinal(rank: number): string {
+  const s = rank === 1 ? 'st' : rank === 2 ? 'nd' : rank === 3 ? 'rd' : 'th'
+  return `${rank}${s} of 6`
 }

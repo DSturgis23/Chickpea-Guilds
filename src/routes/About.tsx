@@ -16,7 +16,7 @@ const GLOSSARY: [string, string][] = [
 
 export function About() {
   return (
-    <div className="space-y-5">
+    <div className="rise space-y-5 md:mx-auto md:max-w-3xl">
       <BackHeader title="How Guilds work" to="/more" />
 
       <Card className="p-4">
@@ -32,7 +32,7 @@ export function About() {
 
       <section>
         <SectionTitle>The six guilds</SectionTitle>
-        <Card className="divide-y divide-line">
+        <Card className="divide-y divide-line-soft">
           {GUILDS.map((g) => (
             <div key={g.id} className="flex items-center gap-3 px-4 py-3">
               <GuildCrest guildId={g.id} size="md" />
@@ -69,7 +69,7 @@ export function About() {
 
       <section>
         <SectionTitle>Glossary</SectionTitle>
-        <Card className="divide-y divide-line">
+        <Card className="divide-y divide-line-soft">
           {GLOSSARY.map(([term, def]) => (
             <div key={term} className="px-4 py-3">
               <p className="text-sm font-semibold">{term}</p>

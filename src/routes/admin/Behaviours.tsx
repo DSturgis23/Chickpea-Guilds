@@ -4,7 +4,7 @@ import { BackHeader } from '../../components/BackHeader'
 
 export function Behaviours() {
   return (
-    <div className="space-y-5">
+    <div className="rise space-y-5 md:mx-auto md:max-w-3xl">
       <BackHeader title="Behaviours & points" to="/more" />
       <p className="text-sm text-ink-soft">
         The behaviours that attract sparks and their values. Editing lands here once
@@ -16,7 +16,7 @@ export function Behaviours() {
           <SectionTitle>
             <span style={{ color: p.colour }}>{p.name}</span> — {p.cupAward}
           </SectionTitle>
-          <Card className="divide-y divide-line">
+          <Card className="divide-y divide-line-soft">
             {BEHAVIOURS.filter((b) => b.pillar === p.key).map((b) => (
               <div key={b.id} className="flex items-center gap-3 px-4 py-3">
                 <span className="flex-1">

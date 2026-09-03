@@ -2,28 +2,36 @@
 
 /*
   Chickpea Guilds — design tokens.
-  Brand: deep maroon + gold, warm off-white paper ground.
-  Guild + pillar accent colours live in src/data/seed.ts (they are editable
-  content, not design constants) and are applied as inline styles.
+  Direction: premium editorial. Warm paper, generous whitespace, hairline rules,
+  a serif (Fraunces) for headlines and big figures, Inter for everything else.
+  Maroon + gold used sparingly as accents. Guild / pillar colours live in
+  src/data/seed.ts and are applied inline.
 */
 @theme {
-  --color-paper: #f7f3ec;
-  --color-paper-2: #efe8db;
-  --color-ink: #241a17;
-  --color-ink-soft: #6b5d55;
+  --color-paper: #faf6ef;
+  --color-paper-2: #f2ebdd;
+  --color-surface: #ffffff;
+
+  --color-ink: #221c18;
+  --color-ink-soft: #6e6259;
+  --color-ink-faint: #9a8f84;
 
   --color-maroon: #6e1423;
-  --color-maroon-dark: #4f0d19;
-  --color-maroon-soft: #f0dcde;
-  --color-gold: #c9a227;
-  --color-gold-soft: #f5ecd0;
+  --color-maroon-dark: #54101b;
+  --color-maroon-wash: #f3e7e4;
+  --color-gold: #b0862a;
+  --color-gold-bright: #c9a227;
+  --color-gold-wash: #f2e9cf;
 
-  --color-line: #e2d8c7;
+  --color-line: #e7decf;
+  --color-line-soft: #efe8db;
 
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
-    Helvetica, Arial, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Palatino,
+    Georgia, 'Times New Roman', serif;
 
-  --radius-card: 1rem;
+  --radius-card: 0.75rem;
 }
 
 html,
@@ -37,12 +45,37 @@ body {
   background: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
+  font-feature-settings: 'ss01';
   -webkit-font-smoothing: antialiased;
-  /* Prevent iOS rubber-band showing white behind the fixed app frame. */
+  text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
 }
 
-/* Respect the notch / home indicator when wrapped or installed. */
+/* Editorial headline defaults — Fraunces with a gentle optical setting. */
+.font-serif {
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 40, 'WONK' 0;
+  letter-spacing: -0.01em;
+}
+
+/* Small-caps style label used across the app. */
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+/* Big serif figures for key stats. */
+.figure {
+  font-family: var(--font-serif);
+  font-variation-settings: 'SOFT' 0, 'WONK' 0;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
 .safe-top {
   padding-top: env(safe-area-inset-top);
 }
@@ -50,8 +83,31 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Tap targets shouldn't show the grey flash on mobile Safari. */
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Respect reduced-motion for the few transitions/animations we add. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  animation: rise 0.4s ease both;
 }

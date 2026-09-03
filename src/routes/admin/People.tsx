@@ -23,7 +23,7 @@ export function People() {
   }, [query, guildFilter])
 
   return (
-    <div className="space-y-4">
+    <div className="rise space-y-4 md:mx-auto md:max-w-4xl">
       <BackHeader title="People & guild allocation" to="/more" />
       <p className="text-sm text-ink-soft">
         {MEMBERS.length} members. Allocation is random on onboarding; you’ll be able to
@@ -52,7 +52,7 @@ export function People() {
         ))}
       </div>
 
-      <Card className="divide-y divide-line">
+      <Card className="divide-y divide-line-soft">
         {rows.map((m) => (
           <div key={m.id} className="flex items-center gap-3 px-4 py-3">
             <Avatar memberId={m.id} size="md" />

@@ -17,16 +17,17 @@ export function Documents() {
   }, [])
 
   return (
-    <div className="space-y-5">
+    <div className="rise space-y-5">
       <BackHeader title="Documents" />
       <p className="text-sm text-ink-soft">
         Handbooks, policies and SOPs — always the current version.
       </p>
 
+      <div className="grid gap-5 md:grid-cols-2">
       {grouped.map(([category, docs]) => (
         <section key={category}>
           <SectionTitle>{category}</SectionTitle>
-          <Card className="divide-y divide-line">
+          <Card className="divide-y divide-line-soft">
             {docs.map((d) => (
               <a
                 key={d.id}
@@ -47,6 +48,7 @@ export function Documents() {
           </Card>
         </section>
       ))}
+      </div>
     </div>
   )
 }

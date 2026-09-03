@@ -3,7 +3,7 @@ import { useAuth } from '../auth/AuthProvider'
 import { EVENTS, guildById, memberName } from '../data/seed'
 import type { GuildEvent } from '../types'
 import { dateWithYear, relativeDays, timeRange } from '../lib/format'
-import { Card, EmptyState, Pill, SectionTitle } from '../components/ui'
+import { Card, EmptyState, PageHeading, Pill, SectionTitle } from '../components/ui'
 
 function visibleTo(ev: GuildEvent, role: string, guildId: string): boolean {
   switch (ev.visibility.kind) {
@@ -35,18 +35,15 @@ export function Events() {
   const past = events.filter((e) => e.endsAt < now)
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h1 className="text-xl font-bold">Events</h1>
-        <p className="text-sm text-ink-soft">Training, seminars and guild-generated events</p>
-      </div>
+    <div className="rise space-y-5">
+      <PageHeading title="Events" sub="Training, seminars and guild-generated events" />
 
       <section>
         <SectionTitle>Upcoming</SectionTitle>
         {upcoming.length === 0 ? (
           <EmptyState title="Nothing scheduled" hint="New events show up here as People & Culture posts them." />
         ) : (
-          <div className="space-y-2">
+          <div className="grid gap-2 md:grid-cols-2 md:gap-4">
             {upcoming.map((ev) => (
               <EventCard
                 key={ev.id}
@@ -62,7 +59,7 @@ export function Events() {
       {past.length > 0 && (
         <section>
           <SectionTitle>Earlier</SectionTitle>
-          <div className="space-y-2 opacity-70">
+          <div className="grid gap-2 opacity-70 md:grid-cols-2 md:gap-4">
             {past.map((ev) => (
               <EventCard
                 key={ev.id}

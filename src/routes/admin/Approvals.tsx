@@ -33,19 +33,19 @@ export function Approvals() {
   if (!user) return null
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 md:mx-auto md:max-w-4xl">
       <BackHeader title="Approvals" to="/more" />
       <p className="text-sm text-ink-soft">
         Sparks are only awarded once you verify the nomination.
       </p>
 
-      <div className="flex w-full rounded-xl bg-paper-2 p-1">
+      <div className="flex w-full max-w-sm rounded-lg border border-line bg-paper-2 p-0.5">
         {(['pending', 'decided'] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold capitalize ${
-              tab === t ? 'bg-white text-ink shadow-sm' : 'text-ink-soft'
+            className={`flex-1 rounded-[7px] px-3 py-1.5 text-xs font-semibold capitalize ${
+              tab === t ? 'bg-surface text-ink shadow-sm' : 'text-ink-faint'
             }`}
           >
             {t} {t === 'pending' && pending.length > 0 && `(${pending.length})`}
@@ -57,7 +57,7 @@ export function Approvals() {
         pending.length === 0 ? (
           <EmptyState title="All caught up" hint="No nominations waiting." />
         ) : (
-          <div className="space-y-3">
+          <div className="grid gap-3 md:grid-cols-2">
             {pending.map((a) => {
               const b = behaviourById(a.behaviourId)
               const m = memberById(a.memberId)
@@ -73,7 +73,7 @@ export function Approvals() {
                         {guildById(m.guildId).nickname} · {m.site}
                       </p>
                     </div>
-                    <span className="text-base font-black text-maroon">
+                    <span className="figure text-base text-maroon">
                       +{sparks(b.points)}
                     </span>
                   </div>
@@ -113,7 +113,7 @@ export function Approvals() {
           </div>
         )
       ) : (
-        <Card className="divide-y divide-line">
+        <Card className="divide-y divide-line-soft">
           {decided.map((a) => {
             const b = behaviourById(a.behaviourId)
             return (

@@ -8,7 +8,7 @@ import {
   memberStandings,
 } from '../../lib/standings'
 import { sparks } from '../../lib/format'
-import { Bar, Card, SectionTitle } from '../../components/ui'
+import { Bar, Card, SectionTitle, Toggle } from '../../components/ui'
 import { GuildCrest } from '../../components/GuildCrest'
 import { BackHeader } from '../../components/BackHeader'
 
@@ -31,21 +31,18 @@ export function Reports() {
   }))
 
   return (
-    <div className="space-y-5">
+    <div className="rise space-y-5 md:mx-auto md:max-w-3xl">
       <BackHeader title="Reports" to="/more" />
 
-      <div className="flex w-full rounded-xl bg-paper-2 p-1">
-        {(['month', 'fy'] as const).map((s) => (
-          <button
-            key={s}
-            onClick={() => setScope(s)}
-            className={`flex-1 rounded-lg px-3 py-2 text-xs font-semibold ${
-              scope === s ? 'bg-white text-ink shadow-sm' : 'text-ink-soft'
-            }`}
-          >
-            {s === 'month' ? month.label : fy.label}
-          </button>
-        ))}
+      <div className="max-w-sm">
+        <Toggle
+          options={[
+            { key: 'month', label: month.label },
+            { key: 'fy', label: fy.label },
+          ]}
+          value={scope}
+          onChange={(v) => setScope(v as 'month' | 'fy')}
+        />
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -59,7 +56,7 @@ export function Reports() {
 
       <section>
         <SectionTitle>Guild totals</SectionTitle>
-        <Card className="divide-y divide-line">
+        <Card className="divide-y divide-line-soft">
           {standings.map((s) => (
             <div key={s.guildId} className="px-4 py-3">
               <div className="flex items-center gap-3">
@@ -99,7 +96,7 @@ export function Reports() {
 
       <section>
         <SectionTitle>Top individuals</SectionTitle>
-        <Card className="divide-y divide-line">
+        <Card className="divide-y divide-line-soft">
           {top.map((m, i) => (
             <div key={m.memberId} className="flex items-center gap-3 px-4 py-2.5">
               <span className="w-5 text-center text-sm font-bold text-ink-soft">
@@ -119,11 +116,11 @@ export function Reports() {
 
       <button
         onClick={() => exportCsv(rows)}
-        className="w-full rounded-xl bg-paper-2 py-3 text-sm font-semibold text-ink active:bg-line"
+        className="w-full rounded-lg border border-line bg-surface py-3 text-sm font-semibold text-ink hover:bg-paper"
       >
         Export nominations (CSV)
       </button>
-      <p className="text-center text-[11px] text-ink-soft">
+      <p className="text-center text-[11px] text-ink-faint">
         {GUILDS.length} guilds · {PILLARS.length} pillars · financial year Aug–Jul
       </p>
     </div>
@@ -133,7 +130,7 @@ export function Reports() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <Card className="p-3">
-      <p className="text-lg font-black">{value}</p>
+      <p className="figure text-lg">{value}</p>
       <p className="text-[11px] leading-tight text-ink-soft">{label}</p>
     </Card>
   )

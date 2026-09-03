@@ -19,12 +19,12 @@ export function More() {
   const admin = isAdminRole(user.role)
 
   return (
-    <div className="space-y-5">
-      <h1 className="text-xl font-bold">More</h1>
+    <div className="rise space-y-5 md:mx-auto md:max-w-lg">
+      <h1 className="font-serif text-2xl font-semibold tracking-tight md:hidden">More</h1>
 
       <section>
         <SectionTitle>For everyone</SectionTitle>
-        <Card className="divide-y divide-line">
+        <Card className="divide-y divide-line-soft">
           <Row to="/documents" icon={<IconDoc width={20} height={20} />} label="Documents" hint="Handbooks, policies, SOPs" />
           <Row to="/profile" icon={<IconUser width={20} height={20} />} label="Your profile" hint="Sparks, guild, details" />
           <Row to="/about" icon={<IconSpark width={20} height={20} />} label="How Guilds work" hint="Sparks, pillars, awards" />
@@ -34,7 +34,7 @@ export function More() {
       {admin && (
         <section>
           <SectionTitle>People &amp; Culture</SectionTitle>
-          <Card className="divide-y divide-line">
+          <Card className="divide-y divide-line-soft">
             <Row
               to="/admin/approvals"
               icon={<IconCheck width={20} height={20} />}

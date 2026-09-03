@@ -53,11 +53,11 @@ export function Nominate() {
     const m = memberById(memberId!)
     const b = behaviourById(behaviourId!)
     return (
-      <div className="flex flex-col items-center pt-10 text-center">
+      <div className="rise mx-auto flex max-w-md flex-col items-center pt-10 text-center">
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#2E7D5B] text-white">
           <IconCheck width={32} height={32} />
         </span>
-        <h1 className="mt-4 text-xl font-bold">Nomination sent</h1>
+        <h1 className="mt-4 font-serif text-2xl font-semibold tracking-tight">Nomination sent</h1>
         <p className="mt-1 max-w-xs text-sm text-ink-soft">
           People &amp; Culture will review it. If approved, <b>{sparks(b.points)} sparks</b>{' '}
           go to <b>{guildById(m.guildId).nickname}</b> for {m.firstName}.
@@ -82,18 +82,23 @@ export function Nominate() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="rise mx-auto max-w-md space-y-4">
       <div className="flex items-center gap-2">
         {step !== 'who' && (
           <button
             onClick={() => setStep(step === 'why' ? 'what' : 'who')}
-            className="text-ink-soft"
+            className="-ml-1 text-ink-soft"
             aria-label="Back"
           >
             <IconArrowLeft width={22} height={22} />
           </button>
         )}
-        <h1 className="text-xl font-bold">Nominate for sparks</h1>
+        <h1 className="font-serif text-2xl font-semibold tracking-tight md:hidden">
+          Nominate for sparks
+        </h1>
+        <h1 className="hidden font-serif text-xl font-semibold tracking-tight md:block">
+          {stepTitle(step)}
+        </h1>
       </div>
 
       <StepDots step={step} />
@@ -148,7 +153,7 @@ export function Nominate() {
               >
                 {p.name}
               </p>
-              <Card className="divide-y divide-line">
+              <Card className="divide-y divide-line-soft">
                 {BEHAVIOURS.filter((b) => b.pillar === p.key && b.active && !b.autoAward).map(
                   (b) => (
                     <button
@@ -235,6 +240,14 @@ function SelectedMember({ memberId }: { memberId: string }) {
       </span>
     </Card>
   )
+}
+
+function stepTitle(step: Step): string {
+  return step === 'who'
+    ? 'Nominate — who?'
+    : step === 'what'
+      ? 'Nominate — what for?'
+      : 'Nominate — the detail'
 }
 
 function StepDots({ step }: { step: Step }) {
