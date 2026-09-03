@@ -129,7 +129,7 @@ export const JOB_ROLES: string[] = [
 const AV = ['#6E1423', '#C64A1F', '#2E5A88', '#1F7A6B', '#8A6D3B', '#4A5468', '#B3122E', '#2E7D5B']
 
 export const MEMBERS: Member[] = [
-  { id: 'u-delilah', firstName: 'Delilah', lastName: 'Sturgis', email: 'delsturg@gmail.com', guildId: 'strikers', site: 'Chickpea Group (Head Office)', jobRole: 'Marketing', role: 'super_admin', startDate: '2024-02-01', active: true, avatarColour: AV[0] },
+  { id: 'u-delilah', firstName: 'Delilah', lastName: 'Sturgis', email: 'delilah@chickpea.group', guildId: 'strikers', site: 'Chickpea Group (Head Office)', jobRole: 'Marketing', role: 'super_admin', startDate: '2024-02-01', active: true, avatarColour: AV[0] },
   { id: 'u-jordan', firstName: 'Jordan', lastName: 'Doe', email: 'jordan@chickpea.group', guildId: 'gunners', site: 'Chickpea Group (Head Office)', jobRole: 'People & Culture', role: 'super_admin', startDate: '2022-09-01', active: true, avatarColour: AV[5] },
   { id: 'u-ethan', firstName: 'Ethan', lastName: 'Doe', email: 'ethan@chickpea.group', guildId: 'stokers', site: 'Chickpea Group (Head Office)', jobRole: 'Managing Director', role: 'director', startDate: '2019-05-01', active: true, avatarColour: AV[1] },
   { id: 'u-tommy', firstName: 'Tommy', lastName: 'Doe', email: 'tommy@chickpea.group', guildId: 'pyros', site: 'Chickpea Group (Head Office)', jobRole: 'Creative Director', role: 'director', startDate: '2019-05-01', active: true, avatarColour: AV[6] },

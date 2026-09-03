@@ -167,4 +167,4 @@ create policy admin_documents on documents for all    to authenticated using (is
 
 -- ---------- seed the two super admins (after they first sign in) ------------
 -- update profiles set role = 'super_admin'
---   where email in ('delsturg@gmail.com', 'jordan@chickpea.group');
+--   where email in ('delilah@chickpea.group', 'jordan@chickpea.group');
