@@ -10,14 +10,14 @@
   picks up the dark palette; Home layers the forge components on top.
 */
 @theme {
-  --color-paper: #14100d; /* app background */
-  --color-paper-2: #221a14; /* recessed: tracks, wells */
-  --color-surface: #1c1712; /* cards */
-  --color-surface-2: #241c15; /* raised / hover */
+  --color-paper: #1f1913; /* app background */
+  --color-paper-2: #2b231b; /* recessed: tracks, wells */
+  --color-surface: #292117; /* cards */
+  --color-surface-2: #342a1e; /* raised / hover */
 
-  --color-ink: #f4ece0; /* primary text (warm cream) */
-  --color-ink-soft: #c4b5a2;
-  --color-ink-faint: #8d7f6f;
+  --color-ink: #f6efe4; /* primary text (warm cream) */
+  --color-ink-soft: #cabaa4;
+  --color-ink-faint: #988873;
 
   --color-maroon: #7d1628;
   --color-maroon-dark: #5c101e;
@@ -31,8 +31,8 @@
   --color-ember: #ff7a2f;
   --color-ember-wash: #3a2113;
 
-  --color-line: #342b22;
-  --color-line-soft: #29211a;
+  --color-line: #453a2d;
+  --color-line-soft: #382e23;
 
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
     Roboto, Helvetica, Arial, sans-serif;
@@ -56,11 +56,11 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
-  background-color: #14100d;
+  background-color: #1f1913;
   /* faint forge glow — texture without an image */
   background-image:
-    radial-gradient(60rem 40rem at 80% -10%, rgba(255, 122, 47, 0.08), transparent 70%),
-    radial-gradient(50rem 40rem at -10% 10%, rgba(125, 22, 40, 0.14), transparent 65%);
+    radial-gradient(60rem 40rem at 82% -12%, rgba(255, 122, 47, 0.1), transparent 70%),
+    radial-gradient(52rem 42rem at -12% 8%, rgba(125, 22, 40, 0.16), transparent 65%);
   background-attachment: fixed;
 }
 
