@@ -15,7 +15,7 @@ import { Avatar } from '../components/Avatar'
 import { GuildCrest } from '../components/GuildCrest'
 import { PillarTag } from '../components/PillarTag'
 import { Button, Card, Field, inputClass } from '../components/ui'
-import { IconArrowLeft, IconCheck, IconSpark } from '../components/icons'
+import { ArrowLeft as IconArrowLeft, Check as IconCheck, Sparkles as IconSpark } from 'lucide-react'
 
 type Step = 'who' | 'what' | 'why' | 'done'
 

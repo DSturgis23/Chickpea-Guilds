@@ -4,15 +4,15 @@ import { useStore } from '../state/store'
 import { guildById } from '../data/seed'
 import { currentMonthPeriod } from '../lib/fy'
 import { guildStandings } from '../lib/standings'
+import { CalendarDays, House, LayoutGrid, Sparkles, Trophy } from 'lucide-react'
 import { GuildCrest } from './GuildCrest'
-import { IconCalendar, IconGrid, IconHome, IconSpark, IconTrophy } from './icons'
 
 const tabs = [
-  { to: '/', label: 'Home', icon: IconHome, end: true },
-  { to: '/leaderboard', label: 'Leaderboard', icon: IconTrophy, end: false },
-  { to: '/nominate', label: 'Nominate', icon: IconSpark, end: false, center: true },
-  { to: '/events', label: 'Events', icon: IconCalendar, end: false },
-  { to: '/more', label: 'More', icon: IconGrid, end: false },
+  { to: '/', label: 'Home', icon: House, end: true },
+  { to: '/leaderboard', label: 'Leaderboard', icon: Trophy, end: false },
+  { to: '/nominate', label: 'Nominate', icon: Sparkles, end: false, center: true },
+  { to: '/events', label: 'Events', icon: CalendarDays, end: false },
+  { to: '/more', label: 'More', icon: LayoutGrid, end: false },
 ]
 
 export function AppShell() {
@@ -74,10 +74,10 @@ export function AppShell() {
             >
               {center ? (
                 <span className="-mt-6 flex h-12 w-12 items-center justify-center rounded-full bg-maroon text-ink shadow-[0_0_0_1px_rgba(240,200,126,0.2),0_8px_24px_-6px_rgba(255,122,47,0.5)] ring-4 ring-paper md:mt-0 md:h-8 md:w-8 md:shadow-none md:ring-0">
-                  <Icon width={23} height={23} className="md:h-[18px] md:w-[18px]" />
+                  <Icon size={22} strokeWidth={2} className="md:h-[18px] md:w-[18px]" />
                 </span>
               ) : (
-                <Icon width={21} height={21} className="md:h-[18px] md:w-[18px]" />
+                <Icon size={20} strokeWidth={2} className="md:h-[18px] md:w-[18px]" />
               )}
               <span>{label}</span>
               {to === '/more' && pendingCount > 0 && (

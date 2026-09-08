@@ -7,7 +7,7 @@ import { Avatar } from '../../components/Avatar'
 import { PillarTag } from '../../components/PillarTag'
 import { Button, Card, EmptyState } from '../../components/ui'
 import { BackHeader } from '../../components/BackHeader'
-import { IconCheck, IconX } from '../../components/icons'
+import { Check as IconCheck, X as IconX } from 'lucide-react'
 
 export function Approvals() {
   const { user } = useAuth()

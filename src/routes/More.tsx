@@ -3,14 +3,14 @@ import { isAdminRole, useAuth } from '../auth/AuthProvider'
 import { useStore } from '../state/store'
 import { Card, SectionTitle } from '../components/ui'
 import {
-  IconCheck,
-  IconChevron,
-  IconDoc,
-  IconGrid,
-  IconShield,
-  IconSpark,
-  IconUser,
-} from '../components/icons'
+  BadgeCheck as IconCheck,
+  ChevronRight as IconChevron,
+  FileText as IconDoc,
+  LayoutGrid as IconGrid,
+  ShieldHalf as IconShield,
+  Sparkles as IconSpark,
+  User as IconUser,
+} from 'lucide-react'
 
 export function More() {
   const { user, signOut } = useAuth()

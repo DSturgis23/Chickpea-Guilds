@@ -29,7 +29,7 @@ export function Leaderboard() {
   const maxTotal = standings[0]?.total || 1
 
   return (
-    <div className="rise space-y-5">
+    <div className="rise space-y-5 md:mx-auto md:max-w-3xl">
       <PageHeading title="Leaderboard" sub={period.label} />
 
       <div className="flex flex-col gap-2 sm:flex-row">
@@ -57,12 +57,22 @@ export function Leaderboard() {
 
       {view === 'guilds' ? (
         <>
-          <Card className="divide-y divide-line-soft">
+          <Card className="divide-y divide-line-soft overflow-hidden">
             {standings.map((s) => {
               const g = guildById(s.guildId)
               const isMine = user?.guildId === s.guildId
               return (
-                <div key={s.guildId} className={`px-4 py-3.5 ${isMine ? 'bg-maroon-wash/50' : ''}`}>
+                <div
+                  key={s.guildId}
+                  className="relative px-4 py-3.5"
+                  style={isMine ? { background: 'var(--color-maroon-wash)' } : undefined}
+                >
+                  {isMine && (
+                    <span
+                      className="absolute inset-y-0 left-0 w-[3px]"
+                      style={{ backgroundColor: g.colour, boxShadow: `0 0 12px ${g.colour}` }}
+                    />
+                  )}
                   <div className="flex items-center gap-3">
                     <span className="figure w-6 text-center text-base text-ink-faint">{s.rank}</span>
                     <GuildCrest guildId={s.guildId} size="md" />
@@ -172,7 +182,10 @@ function StackedPillarBar({
   const widthPct = max > 0 ? (total / max) * 100 : 0
   return (
     <div className="mt-2.5 flex h-1.5 w-full overflow-hidden rounded-full bg-paper-2">
-      <div className="flex h-full" style={{ width: `${Math.max(2, widthPct)}%` }}>
+      <div
+        className="heat-fill flex h-full"
+        style={{ width: `${Math.max(2, widthPct)}%`, boxShadow: '0 0 10px -1px rgba(255,150,80,0.4)' }}
+      >
         {PILLARS.map((p) => {
           const seg = total > 0 ? (byPillar[p.key] / total) * 100 : 0
           if (seg === 0) return null

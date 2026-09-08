@@ -103,7 +103,7 @@ function EventCard({
           </p>
         </div>
         {restricted && (
-          <Pill colour="#6b5d55">
+          <Pill colour="#b79a6a">
             {ev.visibility.kind === 'role' ? 'GM only' : guildById((ev.visibility as { guildId: string }).guildId).nickname}
           </Pill>
         )}

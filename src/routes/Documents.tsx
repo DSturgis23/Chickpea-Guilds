@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { DOCUMENTS } from '../data/seed'
 import { dateWithYear } from '../lib/format'
 import { Card, SectionTitle } from '../components/ui'
-import { IconDoc } from '../components/icons'
+import { FileText as IconDoc } from 'lucide-react'
 import { BackHeader } from '../components/BackHeader'
 
 export function Documents() {
