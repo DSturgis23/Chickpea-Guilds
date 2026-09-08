@@ -1,5 +1,8 @@
 import type {
   Behaviour,
+  ChatChannel,
+  ChatMessage,
+  FeedPost,
   Guild,
   GuildDocument,
   GuildEvent,
@@ -273,6 +276,113 @@ export const EVENTS: GuildEvent[] = [
   { id: 'ev-3', title: 'GM Forum — Q3', description: 'Quarterly General Managers meeting. Guild scheme standing item.', startsAt: '2026-09-24T09:30:00Z', endsAt: '2026-09-24T12:00:00Z', location: 'The Grosvenor Arms', createdById: 'u-jordan', visibility: { kind: 'role', role: 'manager' } },
   { id: 'ev-4', title: 'Guild Council — meeting 2 of 4', description: 'Guild ambassadors + People & Culture. Review spark scoring and any contentious nominations.', startsAt: '2026-10-02T14:00:00Z', endsAt: '2026-10-02T16:00:00Z', location: 'The Pembroke Arms — Guild Hall', createdById: 'u-jordan', visibility: { kind: 'all' } },
   { id: 'ev-5', title: 'Quarr Cross supplier visit', description: 'Kitchen teams welcome. Content sparks for attending and writing it up.', startsAt: '2026-10-09T09:00:00Z', endsAt: '2026-10-09T13:00:00Z', location: 'Quarr Cross Farm', createdById: 'u-jordan', visibility: { kind: 'all' } },
+]
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Demo newsfeed — targeted company posts, a pinned notice, reactions, comments,
+// and a poll. Shows the comms side of the app (the "Blink-lite" pitch).
+// ─────────────────────────────────────────────────────────────────────────────
+const dayAgo = (n: number) =>
+  new Date(Date.now() - n * 86400000 - 3600000 * 4).toISOString()
+
+export const FEED_POSTS: FeedPost[] = [
+  {
+    id: 'fp-pin',
+    authorId: 'u-jordan',
+    postedAt: dayAgo(1),
+    tag: 'Notice',
+    pinned: true,
+    mustRead: true,
+    audience: 'Everyone',
+    body: 'Autumn menu launches Monday across every pub. Allergen matrices are in Documents — please read the changes to the pies and the new alliums line before service. Managers, brief your teams Sunday night.',
+    reactions: { '👍': ['u-amara', 'u-callum', 'u-priya', 'u-theo'], '🙌': ['u-nina'] },
+    comments: [
+      { id: 'c1', authorId: 'u-callum', at: dayAgo(1), body: 'Silver Plough team briefed. Prep list updated.' },
+    ],
+  },
+  {
+    id: 'fp-1',
+    authorId: 'u-tommy',
+    postedAt: dayAgo(2),
+    tag: 'Well done',
+    audience: 'Everyone',
+    imageTint: '#C98A46',
+    body: 'The harvest supper at the Grosvenor sold out in a night and the photos are all over local Instagram. Huge from Amara and the team — that is exactly the kind of Content spark the Guilds are for.',
+    reactions: { '🔥': ['u-jordan', 'u-ethan', 'u-priya', 'u-sam', 'u-omar'], '👏': ['u-nina', 'u-bea', 'u-liam'] },
+    comments: [],
+  },
+  {
+    id: 'fp-poll',
+    authorId: 'u-delilah',
+    postedAt: dayAgo(3),
+    tag: 'Your say',
+    audience: 'Everyone',
+    body: 'Guild Cup night — where should we hold it this year? One vote each, closes Friday.',
+    reactions: {},
+    comments: [
+      { id: 'c2', authorId: 'u-erin', at: dayAgo(2), body: 'Brewery every time.' },
+    ],
+    poll: {
+      question: 'Guild Cup venue 2027',
+      options: [
+        { id: 'o1', label: 'St Austell Brewery', votes: ['u-erin', 'u-omar', 'u-sam', 'u-theo', 'u-nina'] },
+        { id: 'o2', label: 'The Guild Hall, Pembroke Arms', votes: ['u-priya', 'u-bea'] },
+        { id: 'o3', label: 'A marquee at the Grosvenor', votes: ['u-callum', 'u-amara', 'u-liam'] },
+      ],
+    },
+  },
+  {
+    id: 'fp-2',
+    authorId: 'u-callum',
+    postedAt: dayAgo(4),
+    tag: 'Silver Plough',
+    audience: 'The Silver Plough',
+    body: 'Cellar cooling swap is done — new setpoints on the board. Any drop in line quality, tell me straight away. Energy sparks logged for whoever pushed for this.',
+    reactions: { '👍': ['u-jordan', 'u-omar'] },
+    comments: [],
+  },
+  {
+    id: 'fp-3',
+    authorId: 'u-jordan',
+    postedAt: dayAgo(6),
+    tag: 'Guilds',
+    audience: 'Everyone',
+    body: 'September Bright Spark standings are live on the leaderboard. Storm Chasers have pulled ahead on Engagement — Detail Spark is still wide open. Nominate the people you see doing it well.',
+    reactions: { '⚡': ['u-erin', 'u-amara'], '👍': ['u-priya', 'u-theo', 'u-bea'] },
+    comments: [],
+  },
+  {
+    id: 'fp-4',
+    authorId: 'u-amara',
+    postedAt: dayAgo(8),
+    tag: 'General Managers',
+    audience: 'General Managers',
+    body: 'Q3 GM Forum agenda is in the calendar. Bring your labour numbers and one idea to raise guild participation on your site.',
+    reactions: { '👍': ['u-callum'] },
+    comments: [],
+  },
+]
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Demo chat — channels + one readable thread. A preview of the messaging idea,
+// not a working chat build.
+// ─────────────────────────────────────────────────────────────────────────────
+export const CHAT_CHANNELS: ChatChannel[] = [
+  { id: 'ch-pembroke', kind: 'pub', name: 'The Pembroke Arms', members: 24, lastAt: dayAgo(0), preview: 'Priya: covers are up to 78 for tonight', unread: 3 },
+  { id: 'ch-strikers', kind: 'guild', name: 'The Strikers', members: 71, lastAt: dayAgo(0), preview: 'Bea: nominated Omar for the refurb 👏', unread: 1 },
+  { id: 'ch-gms', kind: 'management', name: 'General Managers', members: 12, lastAt: dayAgo(1), preview: 'Amara: labour report attached' },
+  { id: 'ch-grosvenor', kind: 'pub', name: 'The Grosvenor Arms', members: 19, lastAt: dayAgo(1), preview: 'Amara: great work on the supper everyone' },
+  { id: 'ch-kitchen', kind: 'group', name: 'Kitchen — all sites', members: 33, lastAt: dayAgo(2), preview: 'Omar: new alliums spec — see the doc' },
+  { id: 'ch-council', kind: 'guild', name: 'Guild Council', members: 7, lastAt: dayAgo(3), preview: 'Jordan: agenda for meeting 2' },
+]
+
+export const CHAT_MESSAGES: ChatMessage[] = [
+  { id: 'm1', channelId: 'ch-pembroke', authorId: 'u-liam', at: dayAgo(0), body: 'Morning all — deliveries are in, wine order short by two cases of the Picpoul.' },
+  { id: 'm2', channelId: 'ch-pembroke', authorId: 'u-priya', at: dayAgo(0), body: 'Noted. I’ll call the rep. Covers are up to 78 for tonight, two large tables at 8.' },
+  { id: 'm3', channelId: 'ch-pembroke', authorId: 'u-theo', at: dayAgo(0), body: 'Can someone bring the spare card machine down from the office? Ours is playing up.' },
+  { id: 'm4', channelId: 'ch-pembroke', authorId: 'u-priya', at: dayAgo(0), body: 'On it. Also — great service last night team, three Come Back Soons in one shift 🔥' },
+  { id: 'm5', channelId: 'ch-strikers', authorId: 'u-bea', at: dayAgo(0), body: 'Just nominated Omar for the snug refurb — that reclaimed bar back is unreal 👏' },
+  { id: 'm6', channelId: 'ch-strikers', authorId: 'u-erin', at: dayAgo(0), body: 'Seconded. We’re only 1,400 back on the Cup, keep it coming.' },
 ]
 
 export const DOCUMENTS: GuildDocument[] = [

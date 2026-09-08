@@ -41,6 +41,17 @@ export function initials(first: string, last: string): string {
   return (first[0] ?? '') + (last[0] ?? '')
 }
 
+export function timeAgo(iso: string, now = new Date()): string {
+  const mins = Math.round((now.getTime() - new Date(iso).getTime()) / 60000)
+  if (mins < 1) return 'now'
+  if (mins < 60) return `${mins}m`
+  const hrs = Math.round(mins / 60)
+  if (hrs < 24) return `${hrs}h`
+  const days = Math.round(hrs / 24)
+  if (days < 7) return `${days}d`
+  return shortDate(iso)
+}
+
 export function yearsOfService(startIso: string, now = new Date()): number {
   const start = new Date(startIso)
   let years = now.getUTCFullYear() - start.getUTCFullYear()

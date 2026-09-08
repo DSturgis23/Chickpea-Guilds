@@ -4,12 +4,15 @@ import { useStore } from '../state/store'
 import { Card, SectionTitle } from '../components/ui'
 import {
   BadgeCheck as IconCheck,
+  CalendarDays as IconCalendar,
   ChevronRight as IconChevron,
+  CircleUser as IconUserCircle,
   FileText as IconDoc,
   LayoutGrid as IconGrid,
   ShieldHalf as IconShield,
   Sparkles as IconSpark,
-  User as IconUser,
+  Trophy as IconTrophy,
+  Users as IconUser,
 } from 'lucide-react'
 
 export function More() {
@@ -23,11 +26,20 @@ export function More() {
       <h1 className="font-serif text-2xl font-semibold tracking-tight md:hidden">More</h1>
 
       <section>
+        <SectionTitle>Guilds</SectionTitle>
+        <Card className="divide-y divide-line-soft">
+          <Row to="/leaderboard" icon={<IconTrophy width={20} height={20} />} label="Leaderboard" hint="Guilds, pillars and Bright Spark" />
+          <Row to="/events" icon={<IconCalendar width={20} height={20} />} label="Events" hint="Training, seminars, guild events" />
+          <Row to="/about" icon={<IconSpark width={20} height={20} />} label="How Guilds work" hint="Sparks, pillars, awards" />
+        </Card>
+      </section>
+
+      <section>
         <SectionTitle>For everyone</SectionTitle>
         <Card className="divide-y divide-line-soft">
+          <Row to="/directory" icon={<IconUser width={20} height={20} />} label="Directory" hint="Everyone across the group" />
           <Row to="/documents" icon={<IconDoc width={20} height={20} />} label="Documents" hint="Handbooks, policies, SOPs" />
-          <Row to="/profile" icon={<IconUser width={20} height={20} />} label="Your profile" hint="Sparks, guild, details" />
-          <Row to="/about" icon={<IconSpark width={20} height={20} />} label="How Guilds work" hint="Sparks, pillars, awards" />
+          <Row to="/profile" icon={<IconUserCircle width={20} height={20} />} label="Your profile" hint="Sparks, guild, details" />
         </Card>
       </section>
 

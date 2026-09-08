@@ -88,6 +88,56 @@ export interface GuildEvent {
   visibility: EventVisibility
 }
 
+export interface PollOption {
+  id: string
+  label: string
+  votes: string[] // memberIds
+}
+
+export interface FeedComment {
+  id: string
+  authorId: string
+  at: string
+  body: string
+}
+
+export interface FeedPost {
+  id: string
+  authorId: string
+  postedAt: string
+  body: string
+  /** Human-readable audience label, e.g. "Everyone", "The Silver Plough", "The Strikers". */
+  audience: string
+  tag?: string
+  pinned?: boolean
+  mustRead?: boolean
+  /** Decorative colour block stands in for an image in the demo. */
+  imageTint?: string
+  reactions: Record<string, string[]> // emoji -> memberIds
+  comments: FeedComment[]
+  poll?: { question: string; options: PollOption[] }
+}
+
+export type ChannelKind = 'pub' | 'guild' | 'management' | 'group'
+
+export interface ChatChannel {
+  id: string
+  kind: ChannelKind
+  name: string
+  members: number
+  lastAt: string
+  preview: string
+  unread?: number
+}
+
+export interface ChatMessage {
+  id: string
+  channelId: string
+  authorId: string
+  at: string
+  body: string
+}
+
 export interface GuildDocument {
   id: string
   title: string

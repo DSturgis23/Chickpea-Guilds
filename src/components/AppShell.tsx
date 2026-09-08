@@ -4,14 +4,14 @@ import { useStore } from '../state/store'
 import { guildById } from '../data/seed'
 import { currentMonthPeriod } from '../lib/fy'
 import { guildStandings } from '../lib/standings'
-import { CalendarDays, House, LayoutGrid, Sparkles, Trophy } from 'lucide-react'
+import { House, LayoutGrid, MessagesSquare, Newspaper, Sparkles } from 'lucide-react'
 import { GuildCrest } from './GuildCrest'
 
 const tabs = [
   { to: '/', label: 'Home', icon: House, end: true },
-  { to: '/leaderboard', label: 'Leaderboard', icon: Trophy, end: false },
+  { to: '/feed', label: 'Feed', icon: Newspaper, end: false },
   { to: '/nominate', label: 'Nominate', icon: Sparkles, end: false, center: true },
-  { to: '/events', label: 'Events', icon: CalendarDays, end: false },
+  { to: '/chat', label: 'Chat', icon: MessagesSquare, end: false },
   { to: '/more', label: 'More', icon: LayoutGrid, end: false },
 ]
 
@@ -135,6 +135,9 @@ function DesktopTopBar({ path }: { path: string }) {
 
 const TITLES: Record<string, string> = {
   '/': 'Home',
+  '/feed': 'Feed',
+  '/chat': 'Chat',
+  '/directory': 'Directory',
   '/leaderboard': 'Leaderboard',
   '/nominate': 'Nominate for sparks',
   '/events': 'Events',

@@ -6,6 +6,9 @@ import { Home } from './routes/Home'
 import { Leaderboard } from './routes/Leaderboard'
 import { Nominate } from './routes/Nominate'
 import { Events } from './routes/Events'
+import { Feed } from './routes/Feed'
+import { Chat } from './routes/Chat'
+import { Directory } from './routes/Directory'
 import { More } from './routes/More'
 import { Profile } from './routes/Profile'
 import { Documents } from './routes/Documents'
@@ -43,6 +46,10 @@ export default function App() {
         }
       >
         <Route path="/" element={<Home />} />
+        <Route path="/feed" element={<Feed />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/chat/:channelId" element={<Chat />} />
+        <Route path="/directory" element={<Directory />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/nominate" element={<Nominate />} />
         <Route path="/events" element={<Events />} />
