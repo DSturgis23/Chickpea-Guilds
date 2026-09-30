@@ -108,7 +108,7 @@ export const SITES: string[] = [
   'The Market Tavern',
   'The Great Decoy',
   'Nole on the Square',
-  'Chickpea Group (Head Office)',
+  'The Engine Room',
 ]
 
 export const JOB_ROLES: string[] = [
@@ -132,10 +132,10 @@ export const JOB_ROLES: string[] = [
 const AV = ['#6E1423', '#C64A1F', '#2E5A88', '#1F7A6B', '#8A6D3B', '#4A5468', '#B3122E', '#2E7D5B']
 
 export const MEMBERS: Member[] = [
-  { id: 'u-delilah', firstName: 'Delilah', lastName: 'Sturgis', email: 'delilah@chickpea.group', guildId: 'strikers', site: 'Chickpea Group (Head Office)', jobRole: 'Marketing', role: 'super_admin', startDate: '2024-02-01', active: true, avatarColour: AV[0] },
-  { id: 'u-jordan', firstName: 'Jordan', lastName: 'Doe', email: 'jordan@chickpea.group', guildId: 'gunners', site: 'Chickpea Group (Head Office)', jobRole: 'People & Culture', role: 'super_admin', startDate: '2022-09-01', active: true, avatarColour: AV[5] },
-  { id: 'u-ethan', firstName: 'Ethan', lastName: 'Doe', email: 'ethan@chickpea.group', guildId: 'stokers', site: 'Chickpea Group (Head Office)', jobRole: 'Managing Director', role: 'director', startDate: '2019-05-01', active: true, avatarColour: AV[1] },
-  { id: 'u-tommy', firstName: 'Tommy', lastName: 'Doe', email: 'tommy@chickpea.group', guildId: 'pyros', site: 'Chickpea Group (Head Office)', jobRole: 'Creative Director', role: 'director', startDate: '2019-05-01', active: true, avatarColour: AV[6] },
+  { id: 'u-delilah', firstName: 'Delilah', lastName: 'Sturgis', email: 'delilah@chickpea.group', guildId: 'strikers', site: 'The Engine Room', jobRole: 'Marketing', role: 'super_admin', startDate: '2024-02-01', active: true, avatarColour: AV[0] },
+  { id: 'u-jordan', firstName: 'Jordan', lastName: 'Doe', email: 'jordan@chickpea.group', guildId: 'gunners', site: 'The Engine Room', jobRole: 'People & Culture', role: 'super_admin', startDate: '2022-09-01', active: true, avatarColour: AV[5] },
+  { id: 'u-ethan', firstName: 'Ethan', lastName: 'Doe', email: 'ethan@chickpea.group', guildId: 'stokers', site: 'The Engine Room', jobRole: 'Managing Director', role: 'director', startDate: '2019-05-01', active: true, avatarColour: AV[1] },
+  { id: 'u-tommy', firstName: 'Tommy', lastName: 'Doe', email: 'tommy@chickpea.group', guildId: 'pyros', site: 'The Engine Room', jobRole: 'Creative Director', role: 'director', startDate: '2019-05-01', active: true, avatarColour: AV[6] },
   { id: 'u-amara', firstName: 'Amara', lastName: 'Bell', email: 'amara.bell@chickpea.group', guildId: 'stormchasers', site: 'The Grosvenor Arms', jobRole: 'General Manager', role: 'manager', startDate: '2021-03-15', active: true, avatarColour: AV[2] },
   { id: 'u-callum', firstName: 'Callum', lastName: 'Reid', email: 'callum.reid@chickpea.group', guildId: 'hammers', site: 'The Silver Plough', jobRole: 'General Manager', role: 'manager', startDate: '2020-11-02', active: true, avatarColour: AV[4] },
   { id: 'u-priya', firstName: 'Priya', lastName: 'Shah', email: 'priya.shah@chickpea.group', guildId: 'strikers', site: 'The Pembroke Arms', jobRole: 'Chef', role: 'member', startDate: '2023-06-01', active: true, avatarColour: AV[3] },
