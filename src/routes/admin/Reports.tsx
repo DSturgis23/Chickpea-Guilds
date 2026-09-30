@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useStore } from '../../state/store'
-import { GUILDS, PILLARS, guildById, memberName } from '../../data/seed'
+import { GUILDS, PILLARS, guildById } from '../../data/seed'
 import { currentFinancialYearPeriod, currentMonthPeriod } from '../../lib/fy'
 import {
   approvedInPeriod,
@@ -13,7 +13,7 @@ import { GuildCrest } from '../../components/GuildCrest'
 import { BackHeader } from '../../components/BackHeader'
 
 export function Reports() {
-  const { awards } = useStore()
+  const { awards, memberName } = useStore()
   const [scope, setScope] = useState<'month' | 'fy'>('fy')
   const month = useMemo(() => currentMonthPeriod(), [])
   const fy = useMemo(() => currentFinancialYearPeriod(), [])
@@ -115,7 +115,7 @@ export function Reports() {
       </section>
 
       <button
-        onClick={() => exportCsv(rows)}
+        onClick={() => exportCsv(rows, memberName)}
         className="w-full rounded-lg border border-line bg-surface py-3 text-sm font-semibold text-ink hover:bg-paper"
       >
         Export nominations (CSV)
@@ -136,7 +136,7 @@ function Stat({ label, value }: { label: string; value: string }) {
   )
 }
 
-function exportCsv(rows: ReturnType<typeof approvedInPeriod>) {
+function exportCsv(rows: ReturnType<typeof approvedInPeriod>, memberName: (id: string) => string) {
   const header = 'date,member,guild,pillar,points,note\n'
   const body = rows
     .map(

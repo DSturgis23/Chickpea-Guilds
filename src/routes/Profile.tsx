@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useAuth } from '../auth/AuthProvider'
 import { useStore } from '../state/store'
-import { behaviourById, guildById, memberName } from '../data/seed'
+import { guildById } from '../data/seed'
 import { currentFinancialYearPeriod, currentMonthPeriod } from '../lib/fy'
 import { memberTotal } from '../lib/standings'
 import { dateWithYear, sparks, yearsOfService } from '../lib/format'
@@ -12,7 +12,7 @@ import { BackHeader } from '../components/BackHeader'
 
 export function Profile() {
   const { user, signOut } = useAuth()
-  const { awards } = useStore()
+  const { awards, behaviourById, memberName } = useStore()
   const month = useMemo(() => currentMonthPeriod(), [])
   const fy = useMemo(() => currentFinancialYearPeriod(), [])
 
@@ -86,7 +86,7 @@ export function Profile() {
             return (
               <div key={a.id} className="px-4 py-3">
                 <div className="flex items-center gap-2">
-                  <span className="flex-1 text-sm font-medium">{b.title}</span>
+                  <span className="flex-1 text-sm font-medium">{b?.title ?? 'Spark award'}</span>
                   <PillarTag pillar={a.pillar} />
                   <span className="text-sm font-bold text-maroon">+{a.points}</span>
                 </div>

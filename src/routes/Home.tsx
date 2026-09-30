@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowUpRight, CalendarDays, ChevronRight, Flame, Sparkles } from 'lucide-react'
 import { useAuth } from '../auth/AuthProvider'
 import { useStore } from '../state/store'
-import { EVENTS, guildById, memberName } from '../data/seed'
+import { guildById } from '../data/seed'
 import { currentFinancialYearPeriod, currentMonthPeriod } from '../lib/fy'
 import { guildStandings, memberStandings, memberTotal } from '../lib/standings'
 import { relativeDays, shortDate, sparks } from '../lib/format'
@@ -14,7 +14,7 @@ import { Card, SectionTitle } from '../components/ui'
 
 export function Home() {
   const { user } = useAuth()
-  const { awards } = useStore()
+  const { awards, events, memberName } = useStore()
   const month = useMemo(() => currentMonthPeriod(), [])
   const fy = useMemo(() => currentFinancialYearPeriod(), [])
   if (!user) return null
@@ -25,7 +25,7 @@ export function Home() {
   const brightSparks = memberStandings(awards, month, 6)
   const myMonth = memberTotal(awards, user.id, month)
   const myFy = memberTotal(awards, user.id, fy)
-  const nextEvents = [...EVENTS].sort((a, b) => a.startsAt.localeCompare(b.startsAt)).slice(0, 3)
+  const nextEvents = [...events].sort((a, b) => a.startsAt.localeCompare(b.startsAt)).slice(0, 3)
   const guild = guildById(user.guildId)
   const monthShort = month.label.split(' ')[0]
 
@@ -287,6 +287,7 @@ const PLACE = [
 ]
 
 function Podium({ memberId, total, place }: { memberId: string; total: number; place: number }) {
+  const { memberName } = useStore()
   const p = PLACE[place]
   return (
     <div

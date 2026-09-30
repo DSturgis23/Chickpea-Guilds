@@ -24,7 +24,16 @@ export const GUILDS: Guild[] = [
   { id: 'hammers', name: 'The Guild of Blacksmiths', nickname: 'The Hammers', colour: '#C98A46', motto: 'Strike while it’s hot.' },
 ]
 
-export const guildById = (id: string) => GUILDS.find((g) => g.id === id)!
+// Falls back to a neutral placeholder rather than throwing — real accounts can
+// exist for a moment with no guild yet (not allocated, or allocation pending).
+const UNASSIGNED_GUILD: Guild = {
+  id: '',
+  name: 'Not yet allocated',
+  nickname: 'Unassigned',
+  colour: '#8d7f6f',
+  motto: 'Guild allocation happens automatically on onboarding.',
+}
+export const guildById = (id: string) => GUILDS.find((g) => g.id === id) ?? UNASSIGNED_GUILD
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Pillars — the four spark categories (deck slide 16 + glossary).

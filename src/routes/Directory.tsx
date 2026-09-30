@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
-import { Mail, Phone, Search } from 'lucide-react'
-import { GUILDS, MEMBERS, SITES, guildById } from '../data/seed'
+import { Mail, Search } from 'lucide-react'
+import { GUILDS, SITES, guildById } from '../data/seed'
+import { useStore } from '../state/store'
 import { dateWithYear, yearsOfService } from '../lib/format'
 import { Avatar } from '../components/Avatar'
 import { GuildCrest } from '../components/GuildCrest'
@@ -8,6 +9,7 @@ import { Card, PageHeading, inputClass } from '../components/ui'
 import { BackHeader } from '../components/BackHeader'
 
 export function Directory() {
+  const { members } = useStore()
   const [query, setQuery] = useState('')
   const [guild, setGuild] = useState('all')
   const [site, setSite] = useState('all')
@@ -15,7 +17,7 @@ export function Directory() {
 
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return MEMBERS.filter((m) => m.active)
+    return members.filter((m) => m.active)
       .filter((m) => guild === 'all' || m.guildId === guild)
       .filter((m) => site === 'all' || m.site === site)
       .filter(
@@ -26,12 +28,12 @@ export function Directory() {
           m.site.toLowerCase().includes(q),
       )
       .sort((a, b) => a.firstName.localeCompare(b.firstName))
-  }, [query, guild, site])
+  }, [members, query, guild, site])
 
   return (
     <div className="rise space-y-4 md:mx-auto md:max-w-3xl">
       <BackHeader title="Directory" to="/more" />
-      <PageHeading title="Directory" sub={`${MEMBERS.filter((m) => m.active).length} people across the group`} />
+      <PageHeading title="Directory" sub={`${members.filter((m) => m.active).length} people across the group`} />
 
       <div className="relative">
         <Search size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
@@ -88,10 +90,6 @@ export function Directory() {
                     <a href={`mailto:${m.email}`} className="text-gold hover:underline">
                       {m.email}
                     </a>
-                  </div>
-                  <div className="flex items-center gap-2 text-ink-soft">
-                    <Phone size={14} className="text-ink-faint" />
-                    +44 7700 900{String(100 + rows.indexOf(m)).slice(-3)}
                   </div>
                   <p className="text-ink-soft">
                     {guildById(m.guildId).nickname} · joined {dateWithYear(m.startDate)} ·{' '}

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useAuth } from '../auth/AuthProvider'
 import { useStore } from '../state/store'
-import { PILLARS, guildById, memberName, pillarByKey } from '../data/seed'
+import { PILLARS, guildById, pillarByKey } from '../data/seed'
 import type { PillarKey } from '../types'
 import { currentFinancialYearPeriod, currentMonthPeriod } from '../lib/fy'
 import { guildStandings, memberStandings } from '../lib/standings'
@@ -16,7 +16,7 @@ const MEDALS = ['🥇', '🥈', '🥉']
 
 export function Leaderboard() {
   const { user } = useAuth()
-  const { awards } = useStore()
+  const { awards, memberName } = useStore()
   const [periodChoice, setPeriodChoice] = useState<PeriodChoice>('month')
   const [view, setView] = useState<ViewChoice>('guilds')
 

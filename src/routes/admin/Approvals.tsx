@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useAuth } from '../../auth/AuthProvider'
 import { useStore } from '../../state/store'
-import { behaviourById, guildById, memberById, memberName } from '../../data/seed'
+import { guildById } from '../../data/seed'
 import { dateWithYear, sparks } from '../../lib/format'
 import { Avatar } from '../../components/Avatar'
 import { PillarTag } from '../../components/PillarTag'
@@ -11,7 +11,7 @@ import { Check as IconCheck, X as IconX } from 'lucide-react'
 
 export function Approvals() {
   const { user } = useAuth()
-  const { awards, decide } = useStore()
+  const { awards, decide, memberById, memberName, behaviourById } = useStore()
   const [tab, setTab] = useState<'pending' | 'decided'>('pending')
 
   const pending = useMemo(
@@ -61,6 +61,7 @@ export function Approvals() {
             {pending.map((a) => {
               const b = behaviourById(a.behaviourId)
               const m = memberById(a.memberId)
+              if (!b || !m) return null
               return (
                 <Card key={a.id} className="p-4">
                   <div className="flex items-center gap-3">
@@ -95,14 +96,14 @@ export function Approvals() {
                   <div className="mt-3 flex gap-2">
                     <Button
                       className="flex-1"
-                      onClick={() => decide(a.id, 'approved', user.id)}
+                      onClick={() => decide(a.id, 'approved', user.id).catch(console.error)}
                     >
                       <IconCheck width={18} height={18} /> Approve
                     </Button>
                     <Button
                       variant="danger"
                       className="flex-1"
-                      onClick={() => decide(a.id, 'rejected', user.id)}
+                      onClick={() => decide(a.id, 'rejected', user.id).catch(console.error)}
                     >
                       <IconX width={18} height={18} /> Reject
                     </Button>
@@ -131,10 +132,10 @@ export function Approvals() {
                 </span>
                 <span className="flex-1 text-sm">
                   <span className="font-semibold">{memberName(a.memberId)}</span>
-                  <span className="block text-xs text-ink-soft">{b.title}</span>
+                  <span className="block text-xs text-ink-soft">{b?.title ?? 'Spark award'}</span>
                 </span>
                 <span className="text-sm font-bold text-ink-soft">
-                  {a.status === 'approved' ? `+${sparks(b.points)}` : '—'}
+                  {a.status === 'approved' ? `+${sparks(a.points)}` : '—'}
                 </span>
               </div>
             )

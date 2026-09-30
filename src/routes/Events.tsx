@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from '../auth/AuthProvider'
-import { EVENTS, guildById, memberName } from '../data/seed'
+import { useStore } from '../state/store'
+import { guildById } from '../data/seed'
 import type { GuildEvent } from '../types'
 import { dateWithYear, relativeDays, timeRange } from '../lib/format'
 import { Card, EmptyState, PageHeading, Pill, SectionTitle } from '../components/ui'
@@ -23,10 +24,11 @@ function visibleTo(ev: GuildEvent, role: string, guildId: string): boolean {
 
 export function Events() {
   const { user } = useAuth()
+  const { events: liveEvents } = useStore()
   const [openId, setOpenId] = useState<string | null>(null)
   if (!user) return null
 
-  const events = [...EVENTS]
+  const events = [...liveEvents]
     .filter((ev) => visibleTo(ev, user.role, user.guildId))
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt))
 
@@ -84,6 +86,7 @@ function EventCard({
   open: boolean
   onToggle: () => void
 }) {
+  const { memberName } = useStore()
   const restricted = ev.visibility.kind !== 'all'
   return (
     <Card onClick={onToggle} className="p-3">

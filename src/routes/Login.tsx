@@ -11,11 +11,14 @@ export function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [submitting, setSubmitting] = useState(false)
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
-    const res = signIn(email)
+    setSubmitting(true)
+    const res = await signIn(email, password)
+    setSubmitting(false)
     if (res.ok) navigate('/', { replace: true })
     else setError(res.error ?? 'Could not sign in.')
   }
@@ -23,7 +26,7 @@ export function Login() {
   return (
     <div className="mx-auto flex min-h-full max-w-md flex-col justify-center px-6 py-12">
       <div className="mb-8 text-center">
-        <p className="font-serif text-3xl font-black tracking-tight text-maroon">
+        <p className="font-serif text-3xl font-semibold tracking-tight text-gold-bright">
           Chickpea Guilds
         </p>
         <p className="mt-1 text-sm text-ink-soft">
@@ -52,14 +55,14 @@ export function Login() {
             placeholder="••••••••"
           />
         </Field>
-        {error && <p className="text-sm text-[#b3122e]">{error}</p>}
-        <Button size="lg" type="submit">
-          Sign in
+        {error && <p className="text-sm text-[#e2867f]">{error}</p>}
+        <Button size="lg" type="submit" disabled={submitting}>
+          {submitting ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
 
       {!usingRealAuth && (
-        <div className="mt-10 rounded-2xl border border-dashed border-line bg-white/70 p-4">
+        <div className="mt-10 rounded-2xl border border-dashed border-line bg-surface/70 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-ink-soft">
             Preview build — no backend yet
           </p>
@@ -74,7 +77,7 @@ export function Login() {
                   impersonate(m.id)
                   navigate('/', { replace: true })
                 }}
-                className="flex items-center gap-3 rounded-xl border border-line bg-white px-3 py-2 text-left active:bg-paper-2"
+                className="flex items-center gap-3 rounded-xl border border-line bg-surface px-3 py-2 text-left hover:bg-surface-2"
               >
                 <GuildCrest guildId={m.guildId} size="sm" />
                 <span className="flex-1">

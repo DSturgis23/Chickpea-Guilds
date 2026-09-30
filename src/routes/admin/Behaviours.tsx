@@ -1,8 +1,10 @@
-import { BEHAVIOURS, PILLARS } from '../../data/seed'
+import { PILLARS } from '../../data/seed'
+import { useStore } from '../../state/store'
 import { Card, SectionTitle } from '../../components/ui'
 import { BackHeader } from '../../components/BackHeader'
 
 export function Behaviours() {
+  const { behaviours } = useStore()
   return (
     <div className="rise space-y-5 md:mx-auto md:max-w-3xl">
       <BackHeader title="Behaviours & points" to="/more" />
@@ -17,7 +19,7 @@ export function Behaviours() {
             <span style={{ color: p.colour }}>{p.name}</span> — {p.cupAward}
           </SectionTitle>
           <Card className="divide-y divide-line-soft">
-            {BEHAVIOURS.filter((b) => b.pillar === p.key).map((b) => (
+            {behaviours.filter((b) => b.pillar === p.key).map((b) => (
               <div key={b.id} className="flex items-center gap-3 px-4 py-3">
                 <span className="flex-1">
                   <span className="block text-sm font-medium">{b.title}</span>

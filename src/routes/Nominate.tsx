@@ -2,14 +2,7 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { useStore } from '../state/store'
-import {
-  BEHAVIOURS,
-  MEMBERS,
-  PILLARS,
-  behaviourById,
-  guildById,
-  memberById,
-} from '../data/seed'
+import { PILLARS, guildById } from '../data/seed'
 import { sparks } from '../lib/format'
 import { Avatar } from '../components/Avatar'
 import { GuildCrest } from '../components/GuildCrest'
@@ -19,9 +12,18 @@ import { ArrowLeft as IconArrowLeft, Check as IconCheck, Sparkles as IconSpark }
 
 type Step = 'who' | 'what' | 'why' | 'done'
 
+/** Supabase/PostgREST errors are plain objects with a `message`, not `Error` instances. */
+function errorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message
+  if (err && typeof err === 'object' && 'message' in err && typeof err.message === 'string') {
+    return err.message
+  }
+  return 'Could not send the nomination.'
+}
+
 export function Nominate() {
   const { user } = useAuth()
-  const { nominate } = useStore()
+  const { nominate, members, behaviours, memberById, behaviourById } = useStore()
   const navigate = useNavigate()
 
   const [step, setStep] = useState<Step>('who')
@@ -30,28 +32,48 @@ export function Nominate() {
   const [behaviourId, setBehaviourId] = useState<string | null>(null)
   const [note, setNote] = useState('')
   const [occurredOn, setOccurredOn] = useState(() => new Date().toISOString().slice(0, 10))
+  const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState<string | null>(null)
 
   const candidates = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return MEMBERS.filter((m) => m.active && m.id !== user?.id).filter(
-      (m) =>
-        !q ||
-        `${m.firstName} ${m.lastName}`.toLowerCase().includes(q) ||
-        m.site.toLowerCase().includes(q),
-    )
-  }, [query, user?.id])
+    // A person with no guild yet (allocation pending) can't be awarded sparks —
+    // there's nowhere for the points to go — so they're not nominable yet.
+    return members
+      .filter((m) => m.active && m.id !== user?.id && m.guildId)
+      .filter(
+        (m) =>
+          !q ||
+          `${m.firstName} ${m.lastName}`.toLowerCase().includes(q) ||
+          m.site.toLowerCase().includes(q),
+      )
+  }, [members, query, user?.id])
+
+  const awaitingAllocation = useMemo(
+    () => members.filter((m) => m.active && m.id !== user?.id && !m.guildId).length,
+    [members, user?.id],
+  )
 
   if (!user) return null
 
-  function submit() {
+  async function submit() {
     if (!memberId || !behaviourId) return
-    nominate({ memberId, behaviourId, note: note.trim(), occurredOn, nominatedById: user!.id })
-    setStep('done')
+    setSending(true)
+    setSendError(null)
+    try {
+      await nominate({ memberId, behaviourId, note: note.trim(), occurredOn, nominatedById: user!.id })
+      setStep('done')
+    } catch (err) {
+      setSendError(errorMessage(err))
+    } finally {
+      setSending(false)
+    }
   }
 
   if (step === 'done') {
     const m = memberById(memberId!)
     const b = behaviourById(behaviourId!)
+    if (!m || !b) return null
     return (
       <div className="rise mx-auto flex max-w-md flex-col items-center pt-10 text-center">
         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#2E7D5B] text-white">
@@ -139,6 +161,12 @@ export function Nominate() {
               <p className="px-4 py-6 text-center text-sm text-ink-soft">No match.</p>
             )}
           </Card>
+          {awaitingAllocation > 0 && (
+            <p className="px-1 text-xs text-ink-faint">
+              {awaitingAllocation} {awaitingAllocation === 1 ? 'person is' : 'people are'} still
+              awaiting guild allocation and can&rsquo;t be nominated yet.
+            </p>
+          )}
         </div>
       )}
 
@@ -154,7 +182,7 @@ export function Nominate() {
                 {p.name}
               </p>
               <Card className="divide-y divide-line-soft">
-                {BEHAVIOURS.filter((b) => b.pillar === p.key && b.active && !b.autoAward).map(
+                {behaviours.filter((b) => b.pillar === p.key && b.active && !b.autoAward).map(
                   (b) => (
                     <button
                       key={b.id}
@@ -186,17 +214,17 @@ export function Nominate() {
         </div>
       )}
 
-      {step === 'why' && memberId && behaviourId && (
+      {step === 'why' && memberId && behaviourId && behaviourById(behaviourId) && (
         <div className="space-y-4">
           <SelectedMember memberId={memberId} />
           <Card className="flex items-center gap-3 p-4">
             <IconSpark width={22} height={22} className="text-maroon" />
             <span className="flex-1 text-sm font-semibold">
-              {behaviourById(behaviourId).title}
+              {behaviourById(behaviourId)!.title}
             </span>
-            <PillarTag pillar={behaviourById(behaviourId).pillar} />
+            <PillarTag pillar={behaviourById(behaviourId)!.pillar} />
             <span className="text-sm font-bold text-maroon">
-              +{behaviourById(behaviourId).points}
+              +{behaviourById(behaviourId)!.points}
             </span>
           </Card>
           <Field label="What happened?" hint="A sentence or two for People & Culture. Be specific.">
@@ -216,8 +244,9 @@ export function Nominate() {
               onChange={(e) => setOccurredOn(e.target.value)}
             />
           </Field>
-          <Button size="lg" disabled={note.trim().length < 8} onClick={submit}>
-            Send nomination
+          {sendError && <p className="text-sm text-[#e2867f]">{sendError}</p>}
+          <Button size="lg" disabled={note.trim().length < 8 || sending} onClick={submit}>
+            {sending ? 'Sending…' : 'Send nomination'}
           </Button>
         </div>
       )}
@@ -226,7 +255,9 @@ export function Nominate() {
 }
 
 function SelectedMember({ memberId }: { memberId: string }) {
+  const { memberById } = useStore()
   const m = memberById(memberId)
+  if (!m) return null
   return (
     <Card className="flex items-center gap-3 p-3">
       <Avatar memberId={memberId} size="md" />
