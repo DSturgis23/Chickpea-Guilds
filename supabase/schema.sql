@@ -62,6 +62,30 @@ create table profiles (
   created_at  timestamptz not null default now()
 );
 
+-- Auto-provision a minimal profile the moment an admin creates an auth.users row
+-- (Authentication -> Add user in Studio, or the future admin-invite Edge Function).
+-- Pulls first/last name and guild from user_metadata if supplied at creation time;
+-- otherwise falls back to placeholders P&C can fix up in the People screen.
+create or replace function handle_new_user() returns trigger
+language plpgsql security definer set search_path = public as $$
+begin
+  insert into profiles (id, first_name, last_name, email, guild_id)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data->>'first_name', 'New'),
+    coalesce(new.raw_user_meta_data->>'last_name', 'Member'),
+    new.email,
+    new.raw_user_meta_data->>'guild_id'
+  )
+  on conflict (id) do nothing;
+  return new;
+end;
+$$;
+
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function handle_new_user();
+
 -- ---------- the spark ledger --------------------------------------------------
 -- One row is both the nomination and, once approved, the ledger entry.
 create table spark_awards (
