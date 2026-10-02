@@ -56,6 +56,8 @@ export function More() {
             />
             <Row to="/admin/behaviours" icon={<IconSpark width={20} height={20} />} label="Behaviours & points" hint="Add behaviours, amend spark values" />
             <Row to="/admin/people" icon={<IconUser width={20} height={20} />} label="People & guild allocation" hint="Add, move, re-allocate members" />
+            <Row to="/admin/events" icon={<IconCalendar width={20} height={20} />} label="Manage events" hint="Post events, set who sees them" />
+            <Row to="/admin/documents" icon={<IconDoc width={20} height={20} />} label="Manage documents" hint="Upload and remove handbooks, policies" />
             <Row to="/admin/reports" icon={<IconGrid width={20} height={20} />} label="Reports" hint="Scoring by month, year, guild and pillar" />
           </Card>
         </section>

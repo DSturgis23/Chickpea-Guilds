@@ -149,6 +149,8 @@ const TITLES: Record<string, string> = {
   '/admin/behaviours': 'Behaviours & points',
   '/admin/people': 'People & guild allocation',
   '/admin/reports': 'Reports',
+  '/admin/events': 'Manage events',
+  '/admin/documents': 'Manage documents',
 }
 
 function titleFromPath(path: string): string {

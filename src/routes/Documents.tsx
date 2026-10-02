@@ -6,7 +6,7 @@ import { FileText as IconDoc } from 'lucide-react'
 import { BackHeader } from '../components/BackHeader'
 
 export function Documents() {
-  const { documents } = useStore()
+  const { documents, getDocumentUrl } = useStore()
   const grouped = useMemo(() => {
     const map = new Map<string, typeof documents>()
     for (const d of documents) {
@@ -16,6 +16,11 @@ export function Documents() {
     }
     return [...map.entries()]
   }, [documents])
+
+  async function open(fileUrl: string) {
+    const url = await getDocumentUrl(fileUrl)
+    window.open(url, '_blank', 'noopener')
+  }
 
   return (
     <div className="rise space-y-5">
@@ -36,10 +41,10 @@ export function Documents() {
               <SectionTitle>{category}</SectionTitle>
               <Card className="divide-y divide-line-soft">
                 {docs.map((d) => (
-                  <a
+                  <button
                     key={d.id}
-                    href={d.fileUrl}
-                    className="flex items-center gap-3 px-4 py-3 active:bg-paper-2"
+                    onClick={() => open(d.fileUrl)}
+                    className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-paper-2"
                   >
                     <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-maroon-soft text-maroon">
                       <IconDoc width={20} height={20} />
@@ -50,7 +55,7 @@ export function Documents() {
                         {d.sizeLabel} · updated {dateWithYear(d.updatedAt)}
                       </span>
                     </span>
-                  </a>
+                  </button>
                 ))}
               </Card>
             </section>

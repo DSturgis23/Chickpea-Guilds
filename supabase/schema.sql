@@ -189,6 +189,44 @@ create policy write_events on events for all to authenticated
 create policy read_documents  on documents for select to authenticated using (true);
 create policy admin_documents on documents for all    to authenticated using (is_admin()) with check (is_admin());
 
+-- ---------- storage: the 'documents' bucket (private) -----------------------
+-- Bucket itself created via the Storage API, not SQL. These policies gate the
+-- files inside it: anyone signed in can read, only P&C/super_admin can
+-- upload or delete.
+create policy "documents_read" on storage.objects for select
+  to authenticated
+  using (bucket_id = 'documents');
+
+create policy "documents_admin_write" on storage.objects for insert
+  to authenticated
+  with check (bucket_id = 'documents' and public.is_admin());
+
+create policy "documents_admin_delete" on storage.objects for delete
+  to authenticated
+  using (bucket_id = 'documents' and public.is_admin());
+
 -- ---------- seed the two super admins (after they first sign in) ------------
 -- update profiles set role = 'super_admin'
 --   where email in ('delilah@chickpea.group', 'jordan@chickpea.group');
+
+-- ============================================================================
+-- MIGRATION 2 — Harri webhook receiver (supabase/functions/harri-webhook)
+-- Run this block only; everything above this point has already been applied.
+-- ============================================================================
+
+-- Reliable match key between a Harri employee and a Guilds profile — email
+-- alone breaks on a typo'd or changed address. Nullable: the 458 profiles
+-- from the initial bulk sync don't have it yet and will pick it up the first
+-- time a webhook event touches them (matched by email that one time).
+alter table profiles add column if not exists harri_employee_id text unique;
+
+-- Idempotency log for the webhook — Harri may redeliver the same event_id.
+-- Service-role only: the Edge Function is the only thing that ever touches
+-- this table, so RLS stays on with no policies (default-deny).
+create table if not exists webhook_events (
+  event_id     text primary key,
+  type         text not null,
+  employee_id  text,
+  received_at  timestamptz not null default now()
+);
+alter table webhook_events enable row level security;

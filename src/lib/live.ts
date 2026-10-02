@@ -229,6 +229,57 @@ export async function fetchEvents(): Promise<GuildEvent[]> {
   return (data ?? []).map(rowToEvent)
 }
 
+export interface EventInput {
+  title: string
+  description: string
+  startsAt: string
+  endsAt: string
+  location: string
+  visibility: GuildEvent['visibility']
+  createdById: string
+}
+
+function visibilityColumns(v: GuildEvent['visibility']) {
+  return {
+    visibility: v.kind,
+    visible_role: v.kind === 'role' ? v.role : null,
+    visible_guild: v.kind === 'guild' ? v.guildId : null,
+  }
+}
+
+export async function insertEvent(input: EventInput): Promise<void> {
+  const { error } = await must().from('events').insert({
+    title: input.title,
+    description: input.description,
+    starts_at: input.startsAt,
+    ends_at: input.endsAt,
+    location: input.location,
+    created_by: input.createdById,
+    ...visibilityColumns(input.visibility),
+  })
+  if (error) throw error
+}
+
+export async function updateEvent(id: string, input: EventInput): Promise<void> {
+  const { error } = await must()
+    .from('events')
+    .update({
+      title: input.title,
+      description: input.description,
+      starts_at: input.startsAt,
+      ends_at: input.endsAt,
+      location: input.location,
+      ...visibilityColumns(input.visibility),
+    })
+    .eq('id', id)
+  if (error) throw error
+}
+
+export async function deleteEvent(id: string): Promise<void> {
+  const { error } = await must().from('events').delete().eq('id', id)
+  if (error) throw error
+}
+
 // ---------- documents ----------------------------------------------------------
 interface DocumentRow {
   id: string
@@ -254,4 +305,51 @@ export async function fetchDocuments(): Promise<GuildDocument[]> {
   const { data, error } = await must().from('documents').select('*').order('updated_at', { ascending: false })
   if (error) throw error
   return (data ?? []).map(rowToDocument)
+}
+
+const DOCS_BUCKET = 'documents'
+
+function formatBytes(n: number): string {
+  if (n < 1024) return `${n} B`
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`
+}
+
+export async function uploadDocument(input: {
+  file: File
+  title: string
+  category: string
+  uploadedById: string
+}): Promise<void> {
+  const client = must()
+  const path = `${crypto.randomUUID()}-${input.file.name}`
+  const { error: uploadError } = await client.storage.from(DOCS_BUCKET).upload(path, input.file)
+  if (uploadError) throw uploadError
+
+  const { error } = await client.from('documents').insert({
+    title: input.title,
+    category: input.category,
+    storage_path: path,
+    size_label: `${input.file.name.split('.').pop()?.toUpperCase() ?? 'FILE'} · ${formatBytes(input.file.size)}`,
+    uploaded_by: input.uploadedById,
+  })
+  if (error) {
+    await client.storage.from(DOCS_BUCKET).remove([path]) // don't leave an orphaned file
+    throw error
+  }
+}
+
+export async function documentDownloadUrl(storagePath: string): Promise<string> {
+  const { data, error } = await must()
+    .storage.from(DOCS_BUCKET)
+    .createSignedUrl(storagePath, 60 * 10) // 10 minutes
+  if (error) throw error
+  return data.signedUrl
+}
+
+export async function deleteDocument(id: string, storagePath: string): Promise<void> {
+  const client = must()
+  const { error } = await client.from('documents').delete().eq('id', id)
+  if (error) throw error
+  await client.storage.from(DOCS_BUCKET).remove([storagePath])
 }

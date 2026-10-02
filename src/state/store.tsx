@@ -64,6 +64,14 @@ interface StoreValue {
   memberName: (id: string) => string
   behaviourById: (id: string) => Behaviour | undefined
 
+  // Admin: events & documents
+  createEvent: (input: live.EventInput) => Promise<void>
+  editEvent: (id: string, input: live.EventInput) => Promise<void>
+  removeEvent: (id: string) => Promise<void>
+  uploadDocumentFile: (input: { file: File; title: string; category: string; uploadedById: string }) => Promise<void>
+  removeDocument: (id: string, fileUrl: string) => Promise<void>
+  getDocumentUrl: (fileUrl: string) => Promise<string>
+
   // Feed — always seed data (no table yet).
   posts: FeedPost[]
   toggleReaction: (postId: string, emoji: string, memberId: string) => void
@@ -92,6 +100,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const refreshAwards = useCallback(async () => {
     if (!isSupabaseConfigured) return
     setAwards(await live.fetchAwards())
+  }, [])
+
+  const refreshEvents = useCallback(async () => {
+    if (!isSupabaseConfigured) return
+    setEvents(await live.fetchEvents())
+  }, [])
+
+  const refreshDocuments = useCallback(async () => {
+    if (!isSupabaseConfigured) return
+    setDocuments(await live.fetchDocuments())
   }, [])
 
   useEffect(() => {
@@ -198,6 +216,107 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     [refreshAwards],
   )
 
+  const createEvent = useCallback(
+    async (input: live.EventInput) => {
+      if (isSupabaseConfigured) {
+        await live.insertEvent(input)
+        await refreshEvents()
+        return
+      }
+      setEvents((prev) => [
+        ...prev,
+        {
+          id: `ev-new-${Date.now()}`,
+          title: input.title,
+          description: input.description,
+          startsAt: input.startsAt,
+          endsAt: input.endsAt,
+          location: input.location,
+          createdById: input.createdById,
+          visibility: input.visibility,
+        },
+      ])
+    },
+    [refreshEvents],
+  )
+
+  const editEvent = useCallback(
+    async (id: string, input: live.EventInput) => {
+      if (isSupabaseConfigured) {
+        await live.updateEvent(id, input)
+        await refreshEvents()
+        return
+      }
+      setEvents((prev) =>
+        prev.map((e) =>
+          e.id === id
+            ? {
+                ...e,
+                title: input.title,
+                description: input.description,
+                startsAt: input.startsAt,
+                endsAt: input.endsAt,
+                location: input.location,
+                visibility: input.visibility,
+              }
+            : e,
+        ),
+      )
+    },
+    [refreshEvents],
+  )
+
+  const removeEvent = useCallback(
+    async (id: string) => {
+      if (isSupabaseConfigured) {
+        await live.deleteEvent(id)
+        await refreshEvents()
+        return
+      }
+      setEvents((prev) => prev.filter((e) => e.id !== id))
+    },
+    [refreshEvents],
+  )
+
+  const uploadDocumentFile = useCallback(
+    async (input: { file: File; title: string; category: string; uploadedById: string }) => {
+      if (isSupabaseConfigured) {
+        await live.uploadDocument(input)
+        await refreshDocuments()
+        return
+      }
+      setDocuments((prev) => [
+        {
+          id: `doc-new-${Date.now()}`,
+          title: input.title,
+          category: input.category,
+          updatedAt: new Date().toISOString().slice(0, 10),
+          fileUrl: '#',
+          sizeLabel: `${input.file.name.split('.').pop()?.toUpperCase() ?? 'FILE'} · demo`,
+        },
+        ...prev,
+      ])
+    },
+    [refreshDocuments],
+  )
+
+  const removeDocument = useCallback(
+    async (id: string, fileUrl: string) => {
+      if (isSupabaseConfigured) {
+        await live.deleteDocument(id, fileUrl)
+        await refreshDocuments()
+        return
+      }
+      setDocuments((prev) => prev.filter((d) => d.id !== id))
+    },
+    [refreshDocuments],
+  )
+
+  const getDocumentUrl = useCallback(async (fileUrl: string) => {
+    if (isSupabaseConfigured) return live.documentDownloadUrl(fileUrl)
+    return fileUrl
+  }, [])
+
   const toggleReaction = useCallback((postId: string, emoji: string, memberId: string) => {
     setPosts((prev) =>
       prev.map((p) => {
@@ -286,6 +405,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       memberById: memberByIdFn,
       memberName,
       behaviourById: behaviourByIdFn,
+      createEvent,
+      editEvent,
+      removeEvent,
+      uploadDocumentFile,
+      removeDocument,
+      getDocumentUrl,
       posts,
       toggleReaction,
       addComment,
@@ -306,6 +431,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       memberByIdFn,
       memberName,
       behaviourByIdFn,
+      createEvent,
+      editEvent,
+      removeEvent,
+      uploadDocumentFile,
+      removeDocument,
+      getDocumentUrl,
       posts,
       toggleReaction,
       addComment,

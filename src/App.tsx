@@ -17,6 +17,8 @@ import { Approvals } from './routes/admin/Approvals'
 import { Behaviours } from './routes/admin/Behaviours'
 import { People } from './routes/admin/People'
 import { Reports } from './routes/admin/Reports'
+import { AdminEvents } from './routes/admin/AdminEvents'
+import { AdminDocuments } from './routes/admin/AdminDocuments'
 import type { ReactNode } from 'react'
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -86,6 +88,22 @@ export default function App() {
           element={
             <RequireAdmin>
               <Reports />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/events"
+          element={
+            <RequireAdmin>
+              <AdminEvents />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="/admin/documents"
+          element={
+            <RequireAdmin>
+              <AdminDocuments />
             </RequireAdmin>
           }
         />
